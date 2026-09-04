@@ -1,11 +1,12 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Buttons : MonoBehaviour
 {
-    [SerializeField] private KeyCode key = KeyCode.None;
+    [SerializeField] private InputActionReference key;
     [SerializeField] private Color normalColor = Color.white;
     [SerializeField] private Color pressedColor;
 
@@ -22,13 +23,13 @@ public class Buttons : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(key))
+        if (key.action.WasPressedThisFrame())
         {
             _button.OnPointerDown(pointerEventData);
             _button.onClick.Invoke();
             _text.color = pressedColor;
         }
-        else if (Input.GetKeyUp(key))
+        else if (key.action.WasReleasedThisFrame())
         {
             _button.OnPointerUp(pointerEventData);
             _button.onClick.Invoke();
