@@ -32,6 +32,7 @@ namespace Patterns.Singleton
         private float backgroundBaseVolume = 1f;
         private bool backgroundVolumeStored;
 
+        private float timeSinceBegin;
 
         private void Start()
         {
@@ -95,7 +96,9 @@ namespace Patterns.Singleton
 
         public bool GetTrack1Playing() { return isPlayingTrack01; }
 
-        public float GetLength() { return Time.timeSinceLevelLoad + defaultClip.length; }
+        public void SetTimeSinceBegin(float time) { timeSinceBegin = time;  }
+
+        public float GetLength() { return timeSinceBegin + defaultClip.length; }
 
         private IEnumerator FadeTrack(AudioClip newClip, bool dynamic, float volume)
         {

@@ -77,8 +77,7 @@ public class BarraVida : MonoBehaviour
 
         float pulseIntensity = Mathf.Lerp(1.02f, 1.10f, danger);
 
-        if (MusicManager.Instance.IsMusicPlaying())
-            UpdatePulse(false, pulseIntensity);
+        // UpdatePulse(false, pulseIntensity);
     }
 
     void UpdatePulse(bool force = false, float intensity = 1.02f)

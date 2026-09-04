@@ -7,9 +7,11 @@ using UnityEngine.SceneManagement;
 public class ChartManager : MonoBehaviour
 {
     public NoteSpawner spawner;
-    //public Transitions transition;
+    public Transitions transition;
 
     public string filename;
+
+    public bool chartActive;
 
     private int nextNote = 0;
     private float currentTime = 0;
@@ -18,23 +20,22 @@ public class ChartManager : MonoBehaviour
 
     private void Start()
     {
-        ChartLoader loader = GetComponent<ChartLoader>();
+        loader = GetComponent<ChartLoader>();
 
-        chart = loader.Load(filename);
-        nextNote = 0;
-        currentTime = Time.timeSinceLevelLoad;
+        NextSection(filename);
     }
 
     void Update()
     {
+        if (!chartActive) return;
+
         currentTime = Time.timeSinceLevelLoad;
 
-        /*
         if (currentTime >= MusicManager.Instance.GetLength())
         {
-            // transition.NextTransition();
+            chartActive = false;
+            transition.NextTransition();
         }
-        */
 
         if (nextNote >= chart.notes.Length) return;
 
@@ -50,5 +51,9 @@ public class ChartManager : MonoBehaviour
     {
         chart = loader.Load(newFilename);
         nextNote = 0;
+        currentTime = Time.timeSinceLevelLoad;
+        MusicManager.Instance.SetTimeSinceBegin(currentTime);
+        MusicManager.Instance.ReturnToDefault();
+        chartActive = true;
     }
 }
