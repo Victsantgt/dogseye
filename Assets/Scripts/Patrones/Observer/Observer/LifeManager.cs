@@ -2,10 +2,11 @@ using Patterns.Observer.Interfaces;
 using Patterns.Singleton;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
 {
-    public Transitions transicion;
+    //public Transitions transicion;
     public NoteHitSubject subject; 
     public float maxLife = 100f;
     public float currentLife = 100f;
@@ -18,7 +19,8 @@ public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
     public float lifeLoseBad = 5f;
     public float lifeLoseMiss = 10f;
 
-    public string defeatScene = "Derrota";
+    public Image healthBar;
+
     private void Start()
     {
         if (subject != null)
@@ -38,29 +40,29 @@ public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
         {
             case HitResult.Perfect:
                 currentLife += lifeGainPerfect;
-                MusicManager.Instance.Play_SFX(noteAudio[0]);
+                //MusicManager.Instance.Play_SFX(noteAudio[0]);
                 break;
             case HitResult.Good:
                 currentLife += lifeGainGood;
-                MusicManager.Instance.Play_SFX(noteAudio[1]);
+                //MusicManager.Instance.Play_SFX(noteAudio[1]);
                 break;
             case HitResult.Bad:
                 currentLife -= lifeLoseBad;
-                MusicManager.Instance.Play_SFX(noteAudio[2]);
+                //MusicManager.Instance.Play_SFX(noteAudio[2]);
                 break;
             case HitResult.Miss:
                 currentLife -= lifeLoseMiss;
                 //MusicManager.Instance.Play2D_SFX(noteAudio[3]);
                 break;
-
         }
-       
+
+        healthBar.fillAmount = currentLife / 100;
 
         // Limitar la vida entre 0 y maxLife
         currentLife = Mathf.Clamp(currentLife, 0f, maxLife);
         if (currentLife <= 0f)
         {
-            transicion.LoseTransition();
+            //transicion.LoseTransition();
         }
 
     }

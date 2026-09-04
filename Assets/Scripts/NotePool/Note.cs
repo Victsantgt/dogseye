@@ -17,7 +17,9 @@ public class Note : MonoBehaviour, IPooleableObject
 
     public float ventanaAcierto = 0.2f;
 
-    public Transform destiny; //de cada carril
+    public Transform destiny;
+
+    public Transform perfectMark;
 
     public bool Active
     {
@@ -67,15 +69,14 @@ public class Note : MonoBehaviour, IPooleableObject
     public void OnPlayerHit()
     {
         //diferencia de tiempo para saber el rango de la nota
-        float delta = Vector3.Distance(destiny.transform.position, transform.position);
+        float delta = Vector3.Distance(perfectMark.transform.position, transform.position);
         
         HitResult result;
 
-        if (delta <= 0.7f) result = HitResult.Perfect;
-        else if (delta <= 1.4f) result = HitResult.Good;
-        else if (delta <= 2f) result = HitResult.Bad;
+        if (delta <= 0.1f) result = HitResult.Perfect;
+        else if (delta <= 0.3f) result = HitResult.Good;
+        else if (delta <= 0.5f) result = HitResult.Bad;
         else result = HitResult.Miss;
-        Debug.Log("DISTANCIA DESTINO NOTA: " + delta + "RESULTADO:" + result);
 
         SendHit(result != HitResult.Miss, result);
 

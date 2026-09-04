@@ -21,9 +21,9 @@ public class ColliderNoteScript : MonoBehaviour
         if (other.CompareTag("NoteMiddle"))
             middleNote = note;
         if (other.CompareTag("NoteLeft"))
-            middleNote = note;
+            leftNote = note;
         if (other.CompareTag("NoteRight"))
-            middleNote = note;
+            rightNote = note;
     }
 
     private void OnTriggerExit(Collider other)
