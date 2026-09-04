@@ -29,6 +29,11 @@ public class Note : MonoBehaviour, IPooleableObject
 
     private Tween activeTween;
 
+    // [CAMBIO] Guardamos el padre que tenía la nota al salir del pool para poder
+    // devolverla a su sitio cuando se recicla (ver StartMovement / Reset).
+    private Transform parentOriginal;
+    private bool parentOriginalGuardado;
+
     private void OnDisable()
     {
         // Cuando vuelve al pool ? parar tween
@@ -47,9 +52,38 @@ public class Note : MonoBehaviour, IPooleableObject
         if (activeTween != null && activeTween.IsActive())
             activeTween.Kill();
 
+        // [CAMBIO] --- La nota ahora viaja "enganchada" al jugador ---
+        // PROBLEMA: el pool instancia las notas con Instantiate() sin padre, así que
+        // vivían sueltas en la raíz de la escena. Los carriles (Lanes/*Lane, sus
+        // ColliderFinal y perfectMark) cuelgan de Player, o sea que avanzan en Z con él.
+        // El tween sólo leía destiny.position UNA vez, al lanzarse, así que la nota
+        // caía hacia el punto donde estaba el carril en ese instante; para cuando
+        // terminaba de caer el jugador ya había avanzado y la nota quedaba detrás.
+        // SOLUCIÓN: colgamos la nota del mismo padre que su destino (el carril). Así
+        // hereda automáticamente el avance del jugador y la caída se calcula en local.
+        if (destiny != null && destiny.parent != null && transform.parent != destiny.parent)
+        {
+            if (!parentOriginalGuardado)
+            {
+                parentOriginal = transform.parent;
+                parentOriginalGuardado = true;
+            }
+
+            // true = mantiene la posición de mundo actual, la nota no "salta" al reparentar.
+            transform.SetParent(destiny.parent, true);
+        }
+
         Sequence seq = DOTween.Sequence();
 
-        seq.Append(transform.DOMoveY(destiny.position.y, duration).SetEase(Ease.Linear));
+        // [CAMBIO] DOLocalMove espera coordenadas LOCALES del padre, pero antes se le
+        // pasaba destiny.position (mundo). Sólo coincidían porque la nota no tenía padre.
+        // Convertimos el destino al espacio local del padre: como destiny es hijo de ese
+        // mismo padre, este valor es constante aunque el jugador se mueva.
+        Vector3 destinoLocal = transform.parent != null
+            ? transform.parent.InverseTransformPoint(destiny.position)
+            : destiny.position;
+
+        seq.Append(transform.DOLocalMove(destinoLocal, duration).SetEase(Ease.Linear));
 
         activeTween = seq;
     }
@@ -143,6 +177,10 @@ public class Note : MonoBehaviour, IPooleableObject
         if (activeTween != null && activeTween.IsActive())
             activeTween.Kill();
 
+        // [CAMBIO] Al reciclarse la devolvemos al padre que tenía originalmente, para
+        // que el pool no acabe acumulando notas colgadas dentro de los carriles.
+        if (parentOriginalGuardado && transform.parent != parentOriginal)
+            transform.SetParent(parentOriginal, false);
     }
 
     public IPooleableObject Clone()
