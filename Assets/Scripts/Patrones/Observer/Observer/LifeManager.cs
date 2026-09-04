@@ -56,8 +56,6 @@ public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
                 break;
         }
 
-        healthBar.fillAmount = currentLife / 100;
-
         // Limitar la vida entre 0 y maxLife
         currentLife = Mathf.Clamp(currentLife, 0f, maxLife);
         if (currentLife <= 0f)

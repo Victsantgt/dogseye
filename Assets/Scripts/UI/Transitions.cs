@@ -12,14 +12,6 @@ public class Transitions : MonoBehaviour
             this.transform.DOScale(0, 0.5f).SetEase(Ease.OutCirc)
         );
     }
-    public void StarTransition()
-    {
-        if (clip != null) MusicManager.Instance.changeDefault(clip);
-        MusicManager.Instance.StopMusic();
-        this.transform.DOScale(60, 0.5f).SetEase(Ease.InCirc).OnComplete(() =>
-            SceneManager.LoadScene("escenaCombateTest")
-        );
-    }
 
     public void WinTransition()
     {
