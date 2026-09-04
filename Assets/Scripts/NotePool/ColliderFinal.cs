@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ColliderFinal : MonoBehaviour
 {
-    public NotePool pool;
+    //public NotePool pool;
 
     private void OnTriggerEnter(Collider other)
     {

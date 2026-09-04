@@ -1,7 +1,7 @@
 {
     "notes": [
-		{ "time": 3, "lane": "Middle" },
-		{ "time": 4, "lane": "Middle" },
-		{ "time": 5, "lane": "Middle" }
+		{ "time": 1, "lane": "Middle" },
+		{ "time": 2, "lane": "Left" },
+		{ "time": 3, "lane": "Right" }
     ]
 }

@@ -38,7 +38,7 @@
                 {
                     "name": "",
                     "id": "8c7adc24-7a67-465d-9509-435d91503baa",
-                    "path": "<Keyboard>/a",
+                    "path": "<Keyboard>/leftArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -48,8 +48,19 @@
                 },
                 {
                     "name": "",
+                    "id": "fa781e6f-ec05-44f0-a5f1-03fc0961d8d3",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Left",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "13fca2e5-66c5-44d6-831c-a5c132560fe2",
-                    "path": "<Keyboard>/d",
+                    "path": "<Keyboard>/rightArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -59,11 +70,33 @@
                 },
                 {
                     "name": "",
-                    "id": "548627a4-147a-4a95-8924-a03dd07f4a40",
-                    "path": "<Keyboard>/s",
+                    "id": "7db6bcc0-186c-4eab-ad07-1fdef2d06d1c",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": ";Gamepad",
+                    "action": "Right",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "548627a4-147a-4a95-8924-a03dd07f4a40",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Middle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f368938e-a980-43aa-9f5f-93bfef264cfa",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
                     "action": "Middle",
                     "isComposite": false,
                     "isPartOfComposite": false
