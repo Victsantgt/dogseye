@@ -4,6 +4,6 @@ using UnityEngine;
 public class NoteData
 {
     public float time;     // Tiempo en segundos
-    public string lane;    // "Blue", "Yellow", "Pink", "Green"
+    public string lane;    // "Middle", "Left" y "Right"
     
 }

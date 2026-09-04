@@ -95,7 +95,7 @@ namespace Patterns.Singleton
 
         public bool GetTrack1Playing() { return isPlayingTrack01; }
 
-        public float GetLength() { return defaultClip.length; }
+        public float GetLength() { return Time.timeSinceLevelLoad + defaultClip.length; }
 
         private IEnumerator FadeTrack(AudioClip newClip, bool dynamic, float volume)
         {

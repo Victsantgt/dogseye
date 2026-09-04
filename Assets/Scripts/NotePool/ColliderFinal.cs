@@ -9,9 +9,6 @@ public class ColliderFinal : MonoBehaviour
         Note note = other.GetComponent<Note>();
         if (note == null) return;
 
-        // Devuelve la nota al pool
-        //pool.Release(note.noteColor, note);
-
         //patrón observer
         note.RegisterMiss();
 

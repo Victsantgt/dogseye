@@ -31,7 +31,7 @@ public class ChartManager : MonoBehaviour
 
         if (currentTime >= MusicManager.Instance.GetLength())
         {
-            // transition.WinTransition();
+            // transition.NextTransition();
         }
 
         if (nextNote >= chart.notes.Length) return;

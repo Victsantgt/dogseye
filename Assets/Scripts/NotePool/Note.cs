@@ -3,8 +3,6 @@ using Patterns.ObjectPool.Interfaces;
 using Patterns.Singleton;
 using UnityEngine;
 
-
-
 public class Note : MonoBehaviour, IPooleableObject
 {
     private float firstDuration = GameConfig.Instance.GetNoteSpeed();
@@ -13,7 +11,7 @@ public class Note : MonoBehaviour, IPooleableObject
     private float endPosZ = -10f;
     private float endPosY = -1.2f;
 
-    public string noteColor;
+    public string notePosition;
 
     //OBSERVER
     public float noteTime;     //tiempo en el que la nota debía ser pulsada
@@ -84,8 +82,6 @@ public class Note : MonoBehaviour, IPooleableObject
     
     public void OnPlayerHit()
     {
-       
-        
         //diferencia de tiempo para saber el rango de la nota
         float delta = Vector3.Distance(destiny.transform.position, transform.position);
         
@@ -96,7 +92,6 @@ public class Note : MonoBehaviour, IPooleableObject
         else if (delta <= 2f) result = HitResult.Bad;
         else result = HitResult.Miss;
         Debug.Log("DISTANCIA DESTINO NOTA: " + delta + "RESULTADO:" + result);
-   
 
         SendHit(result != HitResult.Miss, result);
 
@@ -128,7 +123,7 @@ public class Note : MonoBehaviour, IPooleableObject
 
         NoteHitInfo info = new NoteHitInfo
         {
-            lane = noteColor,  
+            lane = notePosition,  
             result = HitResult.Good, 
             
         };
@@ -144,7 +139,7 @@ public class Note : MonoBehaviour, IPooleableObject
     {
         NoteHitInfo info = new NoteHitInfo
         {
-            lane = noteColor,
+            lane = notePosition,
             result = HitResult.Miss,
         
         };
@@ -155,9 +150,6 @@ public class Note : MonoBehaviour, IPooleableObject
         IPooleableObject poolObj = GetComponent<IPooleableObject>();
         if (poolObj != null) poolObj.Active = false;
     }
-
-
-
 
     // Llamado cuando el pool recicla la nota
     public void Reset()
