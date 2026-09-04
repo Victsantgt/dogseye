@@ -15,7 +15,7 @@ namespace Patterns.Singleton
         [SerializeField] private AudioSource track01;
         [SerializeField] private AudioSource track02;
 
-        [SerializeField] private AudioSource SFX_2DObject;
+        [SerializeField] private AudioSource SFX_Object;
 
         private bool isPlayingTrack01;
         private bool isMusicPlaying;
@@ -316,9 +316,9 @@ namespace Patterns.Singleton
                 .SetEase(Ease.InOutSine);
         }
 
-        public AudioSource Play2D_SFX(AudioClip audioClip, bool randomize = false, float volume = 1f)
+        public AudioSource Play_SFX(AudioClip audioClip, bool randomize = false, float volume = 1f)
         {
-            AudioSource audioSource = Instantiate(SFX_2DObject, new Vector3(0, 0, 0), Quaternion.identity);
+            AudioSource audioSource = Instantiate(SFX_Object, new Vector3(0, 0, 0), Quaternion.identity);
 
             audioSource.clip = audioClip;
 
@@ -335,9 +335,9 @@ namespace Patterns.Singleton
             return audioSource;
         }
 
-        public AudioSource Play2D_Array(AudioClip[] audioClip, bool randomize = false, float volume = 1f)
+        public AudioSource Play_Array(AudioClip[] audioClip, bool randomize = false, float volume = 1f)
         {
-            AudioSource audioSource = Instantiate(SFX_2DObject, new Vector3(0, 0, 0), Quaternion.identity);
+            AudioSource audioSource = Instantiate(SFX_Object, new Vector3(0, 0, 0), Quaternion.identity);
 
             audioSource.clip = audioClip[Random.Range(0, audioClip.Length)];
 

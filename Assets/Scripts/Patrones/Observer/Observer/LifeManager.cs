@@ -38,15 +38,15 @@ public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
         {
             case HitResult.Perfect:
                 currentLife += lifeGainPerfect;
-                MusicManager.Instance.Play2D_SFX(noteAudio[0]);
+                MusicManager.Instance.Play_SFX(noteAudio[0]);
                 break;
             case HitResult.Good:
                 currentLife += lifeGainGood;
-                MusicManager.Instance.Play2D_SFX(noteAudio[1]);
+                MusicManager.Instance.Play_SFX(noteAudio[1]);
                 break;
             case HitResult.Bad:
                 currentLife -= lifeLoseBad;
-                MusicManager.Instance.Play2D_SFX(noteAudio[2]);
+                MusicManager.Instance.Play_SFX(noteAudio[2]);
                 break;
             case HitResult.Miss:
                 currentLife -= lifeLoseMiss;
@@ -58,7 +58,7 @@ public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
 
         // Limitar la vida entre 0 y maxLife
         currentLife = Mathf.Clamp(currentLife, 0f, maxLife);
-        if (currentLife <= 0f && !GameConfig.Instance.GetInvincible())
+        if (currentLife <= 0f)
         {
             transicion.LoseTransition();
         }

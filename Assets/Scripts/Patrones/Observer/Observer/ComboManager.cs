@@ -78,7 +78,6 @@ public class ComboManager : MonoBehaviour, IObserver<NoteHitInfo>
             }
             
             combo++;
-            if (combo >= 427) { GameConfig.Instance.SetMaxCombo(true); }
         }
         // Solo animar si sube
         bool shouldAnimate = combo > oldCombo;

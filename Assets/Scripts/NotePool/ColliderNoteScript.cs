@@ -1,10 +1,17 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ColliderNoteScript : MonoBehaviour
 {
     public NotePool pool;
 
     private Note middleNote;
+    private Note leftNote;
+    private Note rightNote;
+
+    public InputActionReference noteMiddle;
+    public InputActionReference noteLeft;
+    public InputActionReference noteRight;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -12,6 +19,10 @@ public class ColliderNoteScript : MonoBehaviour
         if (note == null) return;
 
         if (other.CompareTag("NoteMiddle"))
+            middleNote = note;
+        if (other.CompareTag("NoteLeft"))
+            middleNote = note;
+        if (other.CompareTag("NoteRight"))
             middleNote = note;
     }
 
@@ -21,21 +32,22 @@ public class ColliderNoteScript : MonoBehaviour
         if (note == null) return;
 
         if (note == middleNote) middleNote = null;
+        if (note == leftNote) leftNote = null;
+        if (note == rightNote) rightNote = null;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown("a") && middleNote != null)
+        if (noteMiddle.action.WasPressedThisFrame() && middleNote != null)
             Hit(ref middleNote);
+        if (noteLeft.action.WasPressedThisFrame() && leftNote != null)
+            Hit(ref leftNote);
+        if (noteRight.action.WasPressedThisFrame() && rightNote != null)
+            Hit(ref rightNote);
     }
 
     private void Hit(ref Note note)
     {
-        //pool.Release(note.noteColor, note);
-
-        //observer
-        //note.RegisterHit();
-        Debug.Log("ON PLAYER HIT");
         note.OnPlayerHit();
         note = null;
     }
