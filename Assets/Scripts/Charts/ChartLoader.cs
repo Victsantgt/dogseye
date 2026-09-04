@@ -3,9 +3,7 @@ using System.IO;
 
 public class ChartLoader : MonoBehaviour
 {
-    public string filename;
-
-    public ChartData Load()
+    public ChartData Load(string filename)
     {
         string path = Path.Combine(Application.streamingAssetsPath, filename);
 

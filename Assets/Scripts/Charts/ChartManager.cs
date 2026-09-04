@@ -9,22 +9,29 @@ public class ChartManager : MonoBehaviour
     public NoteSpawner spawner;
     public Transitions transition;
 
+    public string filename;
+
     private int nextNote = 0;
-    
-    [SerializeField] private TextMeshProUGUI time;
+    private float currentTime = 0;
+    private ChartData chart;
+    private ChartLoader loader;
+
+    private void Start()
+    {
+        ChartLoader loader = GetComponent<ChartLoader>();
+
+        chart = loader.Load(filename);
+        nextNote = 0;
+        currentTime = Time.timeSinceLevelLoad;
+    }
 
     void Update()
     {
+        currentTime = Time.timeSinceLevelLoad;
 
-        ChartLoader loader = GetComponent<ChartLoader>();
-        ChartData chart = loader.Load();
-
-        float currentTime = Time.timeSinceLevelLoad;
-
-
-        if (currentTime >= MusicManager.Instance.GetLength() + (60f / GameConfig.Instance.GetBPM() * 14f))
+        if (currentTime >= MusicManager.Instance.GetLength())
         {
-            transition.WinTransition();
+            // transition.WinTransition();
         }
 
         if (nextNote >= chart.notes.Length) return;
@@ -35,5 +42,11 @@ public class ChartManager : MonoBehaviour
             spawner.Spawn(lane);
             nextNote++;
         }
+    }
+
+    public void NextSection(string newFilename)
+    {
+        chart = loader.Load(newFilename);
+        nextNote = 0;
     }
 }
