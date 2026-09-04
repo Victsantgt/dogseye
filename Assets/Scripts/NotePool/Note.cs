@@ -5,12 +5,7 @@ using UnityEngine;
 
 public class Note : MonoBehaviour, IPooleableObject
 {
-    private float firstDuration = GameConfig.Instance.GetNoteSpeed();
-    private float colliderPosZ = -5.5495f;
-    private float colliderPosY = -0.584f;
-    private float endPosZ = -10f;
-    private float endPosY = -1.2f;
-
+    private float duration = 2;
     public string notePosition;
 
     //OBSERVER
@@ -18,6 +13,7 @@ public class Note : MonoBehaviour, IPooleableObject
     public string lane;        // Carril
     public NoteHitSubject subject; // sujeto del observer
     public AudioSource music;  // referencia a AudioSource
+    
 
     public float ventanaAcierto = 0.2f;
 
@@ -37,6 +33,7 @@ public class Note : MonoBehaviour, IPooleableObject
         if (activeTween != null && activeTween.IsActive())
             activeTween.Kill();
     }
+
     private void Start()
     {
         if (music == null)
@@ -48,22 +45,9 @@ public class Note : MonoBehaviour, IPooleableObject
         if (activeTween != null && activeTween.IsActive())
             activeTween.Kill();
 
-        Vector3 startPos = transform.position;
-        Vector3 midPos = new Vector3(startPos.x, colliderPosY, colliderPosZ);
-        Vector3 endPos = new Vector3(startPos.x, endPosY, endPosZ);
-
-        // Calcular la velocidad para que sea constante
-        float firstDistance = Vector3.Distance(startPos, midPos);
-        float speed = firstDistance / firstDuration;
-
-        // Calcular el tiempo que tarda en hacer el segundo tramo
-        float secondDistance = Vector3.Distance(midPos, endPos);
-        float secondDuration = secondDistance / speed;
-
         Sequence seq = DOTween.Sequence();
 
-        seq.Append(transform.DOMove(midPos, firstDuration).SetEase(Ease.Linear));
-        seq.Append(transform.DOMove(endPos, secondDuration).SetEase(Ease.Linear));
+        seq.Append(transform.DOMoveY(destiny.position.y, duration).SetEase(Ease.Linear));
 
         activeTween = seq;
     }

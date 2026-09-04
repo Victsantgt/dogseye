@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class ChartManager : MonoBehaviour
 {
     public NoteSpawner spawner;
-    public Transitions transition;
+    //public Transitions transition;
 
     public string filename;
 
@@ -29,10 +29,12 @@ public class ChartManager : MonoBehaviour
     {
         currentTime = Time.timeSinceLevelLoad;
 
+        /*
         if (currentTime >= MusicManager.Instance.GetLength())
         {
             // transition.NextTransition();
         }
+        */
 
         if (nextNote >= chart.notes.Length) return;
 
