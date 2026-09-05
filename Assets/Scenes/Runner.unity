@@ -2099,6 +2099,66 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &1071489726 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8482132767782522888, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+  m_PrefabInstance: {fileID: 6604563331624544902}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1071489730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1071489726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a204ce55524f6c4fa7985f52674527b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TeclaIzquierda: {fileID: -3951181621999188901, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  TeclaCentro: {fileID: -3969659554460172465, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  TeclaDerecha: {fileID: -2502072160090312384, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  AgarrarIzquierda:
+    Gesto: A - agarrar a la izquierda
+    Animator: {fileID: 0}
+    NombreDelTrigger: 
+    AlPulsar:
+      m_PersistentCalls:
+        m_Calls: []
+  EmpujarCarrito:
+    Gesto: S - empujar carrito
+    Animator: {fileID: 0}
+    NombreDelTrigger: 
+    AlPulsar:
+      m_PersistentCalls:
+        m_Calls: []
+  AgarrarDerecha:
+    Gesto: D - agarrar a la derecha
+    Animator: {fileID: 0}
+    NombreDelTrigger: 
+    AlPulsar:
+      m_PersistentCalls:
+        m_Calls: []
+  HabilitarLasAccionesSiHaceFalta: 1
+  LogAlDisparar: 0
+--- !u!114 &1071489731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1071489726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8f52b5015c37e843b612f0f3f7f4131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Color: {r: 0.67295593, g: 0.6248859, b: 0.446521, a: 0}
+  MaterialPersonalizado: {fileID: 0}
+  Margen: {x: 0, y: 0}
+  Visible: 1
+  GizmoEnLaEscena: 1
 --- !u!1 &1160606397
 GameObject:
   m_ObjectHideFlags: 0
@@ -3818,7 +3878,13 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4793992034563471971, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
       insertIndex: -1
       addedObject: {fileID: 343437072}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8482132767782522888, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1071489731}
+    - targetCorrespondingSourceObject: {fileID: 8482132767782522888, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1071489730}
   m_SourcePrefab: {fileID: 100100000, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
 --- !u!4 &6604563331624544903 stripped
 Transform:
