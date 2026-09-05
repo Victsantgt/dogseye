@@ -7,8 +7,14 @@ public class PhoneVibration : MonoBehaviour
     [SerializeField] private float duration = 0.08f; 
     [SerializeField] private float pause = 0.4f;
 
+    [SerializeField] private BubbleText bubbleText;
+
     private Coroutine routine;
 
+    private void Start()
+    {
+        PlayShake();
+    }
 
     public void PlayShake()
     {
@@ -21,6 +27,10 @@ public class PhoneVibration : MonoBehaviour
         yield return StartCoroutine(DoRotationSet());
         yield return new WaitForSeconds(pause);
         yield return StartCoroutine(DoRotationSet());
+        routine = null;
+
+        if (bubbleText != null)
+            bubbleText.StartBubbleText();
     }
 
     private IEnumerator DoRotationSet()

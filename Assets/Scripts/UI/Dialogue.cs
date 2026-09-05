@@ -17,12 +17,6 @@ public class Dialogue : MonoBehaviour
     private string fullText = "";
     private Coroutine typingCoroutine;
 
-
-    private void Start()
-    {
-        StartDialogue();
-    }
-
     private void OnEnable()
     {
         if (skipAction != null)
@@ -50,6 +44,7 @@ public class Dialogue : MonoBehaviour
 
     public void StartDialogue()
     {
+        fullText = text;
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
 
