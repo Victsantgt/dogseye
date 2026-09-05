@@ -2119,24 +2119,23 @@ MonoBehaviour:
   TeclaIzquierda: {fileID: -3951181621999188901, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   TeclaCentro: {fileID: -3969659554460172465, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   TeclaDerecha: {fileID: -2502072160090312384, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  Animator: {fileID: 0}
+  FramesEncendido: 2
   AgarrarIzquierda:
     Gesto: A - agarrar a la izquierda
-    Animator: {fileID: 0}
-    NombreDelTrigger: 
+    NombreDelBool: AgarrarIzquierda
     AlPulsar:
       m_PersistentCalls:
         m_Calls: []
   EmpujarCarrito:
     Gesto: S - empujar carrito
-    Animator: {fileID: 0}
-    NombreDelTrigger: 
+    NombreDelBool: EmpujarCarrito
     AlPulsar:
       m_PersistentCalls:
         m_Calls: []
   AgarrarDerecha:
     Gesto: D - agarrar a la derecha
-    Animator: {fileID: 0}
-    NombreDelTrigger: 
+    NombreDelBool: AgarrarDerecha
     AlPulsar:
       m_PersistentCalls:
         m_Calls: []
