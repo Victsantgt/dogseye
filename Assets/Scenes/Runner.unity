@@ -176,7 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: 5.0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -791,7 +791,6 @@ MonoBehaviour:
   PrefabEnemigo: {fileID: 173214691464615192, guid: e1a723384d6277f498a137f4becb4b08, type: 3}
   Jugador: {fileID: 6604563331624544903}
   SistemaNotas: {fileID: 180828826}
-  Generador: {fileID: 180828823}
   TagDelJugador: Player
   AparicionAutomatica: 1
   SegundosParaReaparecer: 5
@@ -1222,7 +1221,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &460534167
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2361,66 +2360,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d357043b77a23814aa773c182de305f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1814972500
-MonoBehaviour:
+--- !u!1 &1827096938
+GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1814972491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61d191f3d1bc29547b4e58ec7e258b98, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UsarTeclaDePrueba: 1
-  TeclaDeMuerte: 27
-  MusicaAlMorir: 0
-  SegundosDeFrenado: 1.5
-  CurvaDeFrenado:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  PanelMuerte: {fileID: 1160606397}
-  Negro: {fileID: 1160606399}
-  GrupoTexto: {fileID: 1748060406}
-  DuracionFundido: 1.2
-  DuracionFundidoTexto: 0.6
-  TextoMuerteUI: {fileID: 1946450891}
-  TextoMuerte: Has perdido, pulsa R para empezar de nuevo
-  Reinicio: {fileID: 180828827}
-  TeclaReinicio: 32
-  Movimiento: {fileID: 1814972495}
-  Aceleron: {fileID: 1814972498}
-  Camara: {fileID: 166097776}
-  SistemaNotas: {fileID: 180828826}
-  ComponentesADesactivar:
-  - {fileID: 180828825}
-  - {fileID: 180828823}
-  - {fileID: 706128236}
-  ObjetosADesactivar:
-  - {fileID: 460534166}
-  - {fileID: 367674929}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1827096939}
+  m_Layer: 0
+  m_Name: BubbleOption_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1827096939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827096938}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1867983448
 GameObject:
   m_ObjectHideFlags: 0
@@ -2439,7 +2409,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1867983449
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2514,7 +2484,6 @@ CanvasRenderer:
   m_GameObject: {fileID: 1867983448}
   m_CullTransparentMesh: 1
 --- !u!1 &1928557885
---- !u!1 &1827096938
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2524,10 +2493,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1928557886}
   - component: {fileID: 1928557889}
-  - component: {fileID: 1928557888}
   - component: {fileID: 1928557887}
+  - component: {fileID: 1928557888}
   m_Layer: 0
-  m_Name: BubbleOption_1
+  m_Name: 
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3256,6 +3225,7 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1827096939}
   - {fileID: 973581137}
   - {fileID: 6604563331624544902}
   - {fileID: 303515256934669722}
