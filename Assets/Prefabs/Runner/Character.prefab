@@ -199,8 +199,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MultiplicadorMaximo: 2.5
-  Duracion: 3
-  Curva:
+  TiempoSubida: 0.6
+  TiempoBajada: 0.8
+  CurvaSubida:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -213,26 +214,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.25
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.75
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
       time: 1
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -242,6 +225,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  SegundosDeSeguridad: 20
   Movimiento: {fileID: 1092407660185175746}
 --- !u!1 &5936736853624635987
 GameObject:
@@ -271,7 +255,7 @@ Transform:
   m_GameObject: {fileID: 5936736853624635987}
   serializedVersion: 2
   m_LocalRotation: {x: 0.14637314, y: -0, z: -0, w: 0.9892295}
-  m_LocalPosition: {x: 0.28999996, y: 4.83, z: -9.129999}
+  m_LocalPosition: {x: 0, y: 4.83, z: -9.129999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -464,7 +448,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6a8a3e2bbbd12a9428b51da6e713ddea, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.16999996
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 6a8a3e2bbbd12a9428b51da6e713ddea, type: 3}
       propertyPath: m_LocalPosition.y

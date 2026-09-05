@@ -3,7 +3,92 @@ guid: 6a8a3e2bbbd12a9428b51da6e713ddea
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cilindro
+    second: {fileID: 2100000, guid: fd3438a228004944096336987dae111f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cilindro_1
+    second: {fileID: 2100000, guid: 7312a6af67a5b414188c5cd7ad74630b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cilindro_1_split
+    second: {fileID: 2100000, guid: 122254ed3c928224eb4622982c9436ba, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cilindro_1_split_1
+    second: {fileID: 2100000, guid: 0cd62a5c35a22954b8383c1cb02c113b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cilindro_2
+    second: {fileID: 2100000, guid: 7f430db7842fb5a46813a4d85558280c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cilindro_5
+    second: {fileID: 2100000, guid: ec0752afa142cb04b8c28e78d7da0927, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cilindro_6
+    second: {fileID: 2100000, guid: a08629a86d168e34c9d716cc7c22ed7c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Cilindro_7
+    second: {fileID: 2100000, guid: 948234954db7cca499527aa2688a740f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "Esfera_Cu\xE1druple"
+    second: {fileID: 2100000, guid: feff4af1266df264ca8bf24bdf8f2d15, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "Esfera_Cu\xE1druple_1"
+    second: {fileID: 2100000, guid: 163d0e713dbf66f4b8917e8c47221590, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: "Esfera_Cu\xE1druple_ext"
+    second: {fileID: 2100000, guid: 2027091b030d62a45b70123025d950e9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GEO-belly_female_primitive_stylized
+    second: {fileID: 2100000, guid: 0e7c23318623ce749bac7f31f0138041, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GEO-belly_female_primitive_stylized_split
+    second: {fileID: 2100000, guid: 652bf96c3f5ceb947a1b8f1ef3486c85, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GEO-eye_female_primitive_stylized.R
+    second: {fileID: 2100000, guid: 782e583163d3fad428813bfdae04abbe, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: GEO-pelvis_female_primitive_stylized
+    second: {fileID: 2100000, guid: d997bd2468041114faa004efad022b5a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tubo
+    second: {fileID: 2100000, guid: 6b48d8b346b542144b3052236dd78997, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Tubo_1
+    second: {fileID: 2100000, guid: 475b5e1d4bf037249b0f179e66dca6db, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
