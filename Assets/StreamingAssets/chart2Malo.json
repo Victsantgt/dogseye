@@ -1,0 +1,72 @@
+{
+	"notes": [
+        {
+          "lane": "Middle",
+          "time": 1.5
+        },
+        {
+          "lane": "Middle",
+          "time": 3
+        },
+        {
+          "lane": "Middle",
+          "time": 4.5
+        },
+        {
+          "lane": "Middle",
+          "time": 6
+        },
+        {
+          "lane": "Middle",
+          "time": 7.5
+        },
+        {
+          "lane": "Middle",
+          "time": 9
+        },
+        {
+          "lane": "Middle",
+          "time": 10.875
+        },
+        {
+          "lane": "Middle",
+          "time": 12
+        },
+        {
+          "lane": "Middle",
+          "time": 13.5
+        },
+        {
+          "lane": "Middle",
+          "time": 14.625
+        },
+        {
+          "lane": "Middle",
+          "time": 15.375
+        },
+        {
+          "lane": "Middle",
+          "time": 16.875
+        },
+        {
+          "lane": "Middle",
+          "time": 18
+        },
+        {
+          "lane": "Middle",
+          "time": 19.5
+        },
+        {
+          "lane": "Middle",
+          "time": 21
+        },
+        {
+          "lane": "Middle",
+          "time": 22.5
+        },
+        {
+          "lane": "Middle",
+          "time": 24
+        }
+	]
+}
