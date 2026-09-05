@@ -393,38 +393,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 162129661}
   m_CullTransparentMesh: 1
---- !u!1 &166097771 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5936736853624635987, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+--- !u!114 &166097776 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 903067966832029031, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
   m_PrefabInstance: {fileID: 6604563331624544902}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &166097776
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 166097771}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 876266524b9a3834e9d3a56ccb67874c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Activo: 1
-  Movimiento: {fileID: 1814972495}
-  Aceleron: {fileID: 1814972498}
-  DeltaFOV: 25
-  CompensacionDolly: 1
-  RetrocesoMaximo: 6
-  DesplazamientoExtra: {x: 0, y: 0, z: 0}
-  UmbralMinimo: 0.05
-  SuavizarIntensidad: 1
-  IntensidadManualMaxima: 1
-  TiempoSubidaManual: 0.4
-  TiempoBajadaManual: 0.6
-  DesplazarPuntoDeFuga: 1
-  AlturaPuntoDeFuga: -0.21
-  PuntoDeFugaSoloEnAceleron: 1
 --- !u!1 &178382648
 GameObject:
   m_ObjectHideFlags: 0
@@ -1720,17 +1699,12 @@ Material:
     - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!1 &1814972491 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5895062542079577123, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
-  m_PrefabInstance: {fileID: 6604563331624544902}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1814972495 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1092407660185175746, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
   m_PrefabInstance: {fileID: 6604563331624544902}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1814972491}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3f7e0ce8fc717384ea9008d63a5fcee9, type: 3}
@@ -1741,72 +1715,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1507611146167462089, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
   m_PrefabInstance: {fileID: 6604563331624544902}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1814972491}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d357043b77a23814aa773c182de305f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1814972500
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1814972491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61d191f3d1bc29547b4e58ec7e258b98, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  UsarTeclaDePrueba: 1
-  TeclaDeMuerte: 27
-  MusicaAlMorir: 0
-  SegundosDeFrenado: 1.5
-  CurvaDeFrenado:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  PanelMuerte: {fileID: 1160606397}
-  Negro: {fileID: 1160606399}
-  GrupoTexto: {fileID: 1748060406}
-  DuracionFundido: 1.2
-  DuracionFundidoTexto: 0.6
-  TextoMuerteUI: {fileID: 1946450891}
-  TextoMuerte: Has perdido, pulsa R para empezar de nuevo
-  Reinicio: {fileID: 180828827}
-  TeclaReinicio: 32
-  Movimiento: {fileID: 1814972495}
-  Aceleron: {fileID: 1814972498}
-  Camara: {fileID: 166097776}
-  SistemaNotas: {fileID: 180828826}
-  ComponentesADesactivar:
-  - {fileID: 180828825}
-  - {fileID: 180828823}
-  - {fileID: 706128236}
-  ObjetosADesactivar:
-  - {fileID: 460534166}
-  - {fileID: 367674929}
 --- !u!1 &1827096938
 GameObject:
   m_ObjectHideFlags: 0
@@ -2618,10 +2532,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1092407660185175746, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
-      propertyPath: PlayerSpeed
-      value: 24
-      objectReference: {fileID: 0}
     - target: {fileID: 1591134152834062666, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.2
@@ -2666,24 +2576,62 @@ PrefabInstance:
       propertyPath: decision
       value: 
       objectReference: {fileID: 180828825}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: Negro
+      value: 
+      objectReference: {fileID: 1160606399}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: Reinicio
+      value: 
+      objectReference: {fileID: 180828827}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: GrupoTexto
+      value: 
+      objectReference: {fileID: 1748060406}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: PanelMuerte
+      value: 
+      objectReference: {fileID: 1160606397}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: SistemaNotas
+      value: 
+      objectReference: {fileID: 180828826}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: TextoMuerteUI
+      value: 
+      objectReference: {fileID: 1946450891}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: 'ObjetosADesactivar.Array.data[0]'
+      value: 
+      objectReference: {fileID: 460534166}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: 'ObjetosADesactivar.Array.data[1]'
+      value: 
+      objectReference: {fileID: 367674929}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: 'ComponentesADesactivar.Array.data[0]'
+      value: 
+      objectReference: {fileID: 180828825}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: 'ComponentesADesactivar.Array.data[1]'
+      value: 
+      objectReference: {fileID: 180828823}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: 'ComponentesADesactivar.Array.data[2]'
+      value: 
+      objectReference: {fileID: 706128236}
     - target: {fileID: 5895062542079577123, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 8451444118556500362, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
-      propertyPath: muerte
+    - target: {fileID: 6690020784385776103, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: laneRightDestiny
       value: 
-      objectReference: {fileID: 1814972500}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5895062542079577123, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1814972500}
-    - targetCorrespondingSourceObject: {fileID: 5936736853624635987, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 166097776}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
 --- !u!4 &6604563331624544903 stripped
 Transform:

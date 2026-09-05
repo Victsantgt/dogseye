@@ -17,8 +17,6 @@ public class Note : MonoBehaviour, IPooleableObject
 
     public float ventanaAcierto = 0.2f;
 
-    public Transform destiny;
-
     public Transform perfectMark;
 
     public bool Active
@@ -47,47 +45,6 @@ public class Note : MonoBehaviour, IPooleableObject
             music = FindFirstObjectByType<AudioSource>();
     }
 
-    public void StartMovement()
-    {
-        if (activeTween != null && activeTween.IsActive())
-            activeTween.Kill();
-
-        // [CAMBIO] --- La nota ahora viaja "enganchada" al jugador ---
-        // PROBLEMA: el pool instancia las notas con Instantiate() sin padre, así que
-        // vivían sueltas en la raíz de la escena. Los carriles (Lanes/*Lane, sus
-        // ColliderFinal y perfectMark) cuelgan de Player, o sea que avanzan en Z con él.
-        // El tween sólo leía destiny.position UNA vez, al lanzarse, así que la nota
-        // caía hacia el punto donde estaba el carril en ese instante; para cuando
-        // terminaba de caer el jugador ya había avanzado y la nota quedaba detrás.
-        // SOLUCIÓN: colgamos la nota del mismo padre que su destino (el carril). Así
-        // hereda automáticamente el avance del jugador y la caída se calcula en local.
-        if (destiny != null && destiny.parent != null && transform.parent != destiny.parent)
-        {
-            if (!parentOriginalGuardado)
-            {
-                parentOriginal = transform.parent;
-                parentOriginalGuardado = true;
-            }
-
-            // true = mantiene la posición de mundo actual, la nota no "salta" al reparentar.
-            transform.SetParent(destiny.parent, true);
-        }
-
-        Sequence seq = DOTween.Sequence();
-
-        // [CAMBIO] DOLocalMove espera coordenadas LOCALES del padre, pero antes se le
-        // pasaba destiny.position (mundo). Sólo coincidían porque la nota no tenía padre.
-        // Convertimos el destino al espacio local del padre: como destiny es hijo de ese
-        // mismo padre, este valor es constante aunque el jugador se mueva.
-        Vector3 destinoLocal = transform.parent != null
-            ? transform.parent.InverseTransformPoint(destiny.position)
-            : destiny.position;
-
-        seq.Append(transform.DOLocalMove(destinoLocal, duration).SetEase(Ease.Linear));
-
-        activeTween = seq;
-    }
-
     // OBSERVER!!!
 
     // Cuando la nota llega al final sin ser golpeada
@@ -107,12 +64,13 @@ public class Note : MonoBehaviour, IPooleableObject
         
         HitResult result;
 
-        if (delta <= 0.1f) result = HitResult.Perfect;
-        else if (delta <= 0.3f) result = HitResult.Good;
-        else if (delta <= 0.5f) result = HitResult.Bad;
+        if (delta <= 70f) result = HitResult.Perfect;
+        else if (delta <= 70.5f) result = HitResult.Good;
+        else if (delta <= 71.5f) result = HitResult.Bad;
         else result = HitResult.Miss;
 
         SendHit(result != HitResult.Miss, result);
+        Debug.Log("DISTANCIA DESTINO NOTA: " + delta + "RESULTADO:" + result);
 
         // devolver al pool
         Active = false;
