@@ -2,16 +2,21 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Dialogue : MonoBehaviour
 {
-    [SerializeField] private string text;
+    [SerializeField] private string[] text;
+
+    private int index = 0;
 
     [SerializeField] private TMP_Text dialogueText;
 
     [SerializeField] private float typingSpeed = 0.03f;
 
     [SerializeField] private InputActionReference skipAction;
+
+    [SerializeField] private DialogueOptionsPopup optionsPopup;
 
     private bool isTyping = false;
     private string fullText = "";
@@ -44,7 +49,7 @@ public class Dialogue : MonoBehaviour
 
     public void StartDialogue()
     {
-        fullText = text;
+        fullText = text[index];
         if (typingCoroutine != null)
             StopCoroutine(typingCoroutine);
 
@@ -76,5 +81,17 @@ public class Dialogue : MonoBehaviour
 
         dialogueText.text = fullText;
         isTyping = false;
+        
+
+        OnLineFinished();
+    }
+
+    private void OnLineFinished()
+    {
+        int finishedIndex = index;
+        index++;
+
+        if (optionsPopup != null)
+            optionsPopup.ShowOptions(finishedIndex);
     }
 }
