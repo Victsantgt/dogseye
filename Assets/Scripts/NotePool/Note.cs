@@ -19,8 +19,6 @@ public class Note : MonoBehaviour, IPooleableObject
 
     public Transform perfectMark;
 
-    public EnemyRunner enemy;
-
     public bool Active
     {
         get => gameObject.activeSelf;
@@ -74,17 +72,8 @@ public class Note : MonoBehaviour, IPooleableObject
         SendHit(result != HitResult.Miss, result);
         Debug.Log("DISTANCIA DESTINO NOTA: " + delta + "RESULTADO:" + result);
 
-        if (result == HitResult.Perfect || result == HitResult.Good)
-        {
-            if (enemy != null) enemy.Vencer();
-        }
-        else
-        {
-            if (enemy != null) enemy.RetirarseYa();
-        }
-
-            // devolver al pool
-            Active = false;
+        // devolver al pool
+        Active = false;
     }
 
     // notifica el resultado
