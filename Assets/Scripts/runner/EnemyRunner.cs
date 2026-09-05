@@ -40,15 +40,6 @@ public class EnemyRunner : MonoBehaviour
     [Tooltip("Altura a la que vuela, respecto a la del jugador. 0 = a la misma altura.")]
     public float AlturaSobreElJugador = 0f;
 
-    [Header("Anchura del pasillo")]
-    // MEDIDO sobre la escena, no estimado. Lo que mas se mete hacia el centro no son
-    // las estanterias sino las 'column' que cuelgan de ellas: dejan el hueco libre en
-    // x [-9.01, 8.62]. Con el cubo (1.5 de medio ancho) el centro del enemigo puede ir
-    // como mucho a [-7.51, 7.12], y como el jugador esta en x=0.20 eso son -7.71 / 6.92
-    // de separacion. 6.5 deja margen por los dos lados.
-    [Tooltip("Separacion lateral respecto al jugador en un pasillo Wide. El hueco libre medido deja como maximo 6.9 hacia la derecha; por encima de eso el enemigo se mete en las columnas de las estanterias.")]
-    public float LateralWide = 6.5f;
-
     [Header("Acompanar")]
     [Tooltip("Unidades por delante del jugador a las que se queda cuando le alcanza.")]
     public float DistanciaAlAcompanar = 8f;
@@ -103,8 +94,7 @@ public class EnemyRunner : MonoBehaviour
     // de mundo se recalcula a partir de el en cada LateUpdate.
     Vector3 desplazamiento;
 
-    float lateralDeEntrada;   // carril por el que va, con signo. En Narrow es 0.
-    float signoDeEntrada;     // lado que le toco en el sorteo. En Narrow no mueve el carril, pero marca hacia donde le apartamos al vencerle.
+    float signoDeApartado;    // hacia que lado sale despedido al vencerle. Lo sortea el manager.
     float velocidadFrenado;   // memoria del SmoothDamp
     bool frenando;            // ya ha entrado en el tramo de frenado
     float tiempoAcompanando;  // reloj del bamboleo, arranca a 0 al llegar
@@ -141,15 +131,11 @@ public class EnemyRunner : MonoBehaviour
     /// nada mas instanciarlo.
     /// </summary>
     /// <param name="objetivo">El Player. Todo el movimiento se mide respecto a el.</param>
-    /// <param name="pasilloEstrecho">
-    /// True si el terreno es Narrow. Ahi no hay carril lateral que valga: viene ya
-    /// centrado delante del jugador. En Wide viene por su lado, en diagonal.
+    /// <param name="apartarALaDerecha">
+    /// Hacia que lado sale despedido si le vencemos. Lo sortea el manager. No cambia
+    /// por donde viene: viene siempre por el centro.
     /// </param>
-    /// <param name="ladoDerecho">
-    /// De que lado sale. Lo sortea el manager. En Narrow no cambia por donde viene,
-    /// solo hacia donde sale despedido si le vencemos.
-    /// </param>
-    public void Lanzar(Transform objetivo, bool pasilloEstrecho, bool ladoDerecho)
+    public void Lanzar(Transform objetivo, bool apartarALaDerecha)
     {
         if (objetivo == null)
         {
@@ -159,15 +145,12 @@ public class EnemyRunner : MonoBehaviour
         }
 
         jugador = objetivo;
-        signoDeEntrada = ladoDerecho ? 1f : -1f;
+        signoDeApartado = apartarALaDerecha ? 1f : -1f;
 
-        // En Wide entra por un lado y se queda ahi: la diagonal es su sitio final.
-        // En Narrow el hueco libre son 9 unidades y el enemigo mide 3, asi que no hay
-        // carril lateral en el que quepa: sale ya centrado delante del jugador y viene
-        // recto. Si entrara de lado se comeria las estanterias por el camino.
-        lateralDeEntrada = pasilloEstrecho ? 0f : signoDeEntrada * LateralWide;
-
-        desplazamiento = new Vector3(lateralDeEntrada, AlturaSobreElJugador, DistanciaDeAparicion);
+        // Siempre por el centro, sea el segmento que sea: viene alineado con el jugador
+        // y no se sale de esa linea hasta que le vencemos. Al no haber carriles laterales
+        // tampoco hay nada que ajustar cuando cambia el ancho del pasillo.
+        desplazamiento = new Vector3(0f, AlturaSobreElJugador, DistanciaDeAparicion);
         velocidadFrenado = 0f;
         frenando = false;
         tiempoAcompanando = 0f;
@@ -295,8 +278,7 @@ public class EnemyRunner : MonoBehaviour
             }
         }
 
-        // El carril no se toca durante el acercamiento: viene recto por el suyo, sea
-        // el lateral de un Wide o el centro de un Narrow.
+        // La X no se toca durante el acercamiento: viene recto por el centro.
     }
 
     /// <summary>
@@ -322,9 +304,9 @@ public class EnemyRunner : MonoBehaviour
     {
         desplazamiento.y += VelocidadAlSerVencido * dt;
 
-        // Hacia el lado que le toco en el sorteo. En Narrow viene centrado, asi que
-        // este signo es lo unico que decide por donde sale despedido.
-        desplazamiento.x += signoDeEntrada * ApartadoAlSerVencido * dt;
+        // Como viene siempre por el centro, el sorteo del manager es lo unico que
+        // decide por que lado sale despedido.
+        desplazamiento.x += signoDeApartado * ApartadoAlSerVencido * dt;
 
         if (GiroAlSerVencido != 0f)
             transform.Rotate(Vector3.right * GiroAlSerVencido * dt, Space.Self);
@@ -332,8 +314,8 @@ public class EnemyRunner : MonoBehaviour
 
     void VolverPorDondeVino(float dt)
     {
-        // Se va por su carril, que es el mismo por el que vino: durante el acercamiento
-        // y el acompanar la X no se ha movido.
+        // Se va por donde vino: la X sigue en el centro, ni el acercamiento ni el
+        // acompanamiento la tocan.
         desplazamiento.z += VelocidadDeRetirada * dt;
     }
 

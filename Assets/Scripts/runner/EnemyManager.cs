@@ -33,9 +33,6 @@ public class EnemyManager : MonoBehaviour
     [Tooltip("De donde se saca si estamos en fase de notas o en el puente. Si se deja vacio se busca en este mismo GameObject.")]
     public RhythmSystemToggle SistemaNotas;
 
-    [Tooltip("De donde se saca si el pasillo es Wide o Narrow. Si se deja vacio se busca en este mismo GameObject.")]
-    public SegmentGenerator Generador;
-
     [Tooltip("Tag con el que se busca al jugador si no esta asignado arriba.")]
     public string TagDelJugador = "Player";
 
@@ -95,9 +92,6 @@ public class EnemyManager : MonoBehaviour
     {
         if (SistemaNotas == null)
             SistemaNotas = GetComponent<RhythmSystemToggle>();
-
-        if (Generador == null)
-            Generador = GetComponent<SegmentGenerator>();
 
         if (Jugador == null)
         {
@@ -190,8 +184,9 @@ public class EnemyManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Saca un enemigo de la niebla. En Wide entra por un lado al azar y se queda en
-    /// diagonal; en Narrow viene ya centrado, justo delante del jugador.
+    /// Saca un enemigo de la niebla. Viene siempre por el centro, justo delante del
+    /// jugador, sea cual sea el segmento; el sorteo del lado solo decide por donde
+    /// saldra despedido si le vencemos.
     /// No hace nada si estamos en el puente, ni si queda alguno en pantalla: solo
     /// puede haber uno a la vez, y cuenta tambien el que se este yendo.
     /// </summary>
@@ -229,8 +224,7 @@ public class EnemyManager : MonoBehaviour
         enemigoActual = enemigo;
         enemigo.AlDesaparecer += OlvidarEnemigo;
 
-        bool estrecho = Generador != null && Generador.TipoActual == TipoSegmento.Narrow;
-        enemigo.Lanzar(Jugador, estrecho, Random.value < 0.5f);
+        enemigo.Lanzar(Jugador, Random.value < 0.5f);
     }
 
     /// <summary>
