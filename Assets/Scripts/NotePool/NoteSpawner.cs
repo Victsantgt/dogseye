@@ -12,6 +12,7 @@ public class NoteSpawner : MonoBehaviour
     public Transform laneRight;
     public Transform laneRightDestiny;
     public Transform laneRightPerfect;
+    public EnemyManager enemyManager;
 
     //Para el patr�n observer
     public NoteHitSubject subject; 
@@ -33,6 +34,9 @@ public class NoteSpawner : MonoBehaviour
             case "Middle":
                 note.transform.position = laneMiddle.position;
                 note.perfectMark = laneMiddlePerfect;
+                GameObject enemy = enemyManager.Aparecer();
+                EnemyRunner enemyRunner = enemy.GetComponent<EnemyRunner>();
+                note.enemy = enemyRunner;
                 break;
             case "Left":
                 note.transform.position = laneLeft.position;

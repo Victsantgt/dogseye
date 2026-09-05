@@ -191,27 +191,24 @@ public class EnemyManager : MonoBehaviour
     /// puede haber uno a la vez, y cuenta tambien el que se este yendo.
     /// </summary>
     [ContextMenu("Aparecer enemigo (prueba)")]
-    public void Aparecer()
+    public GameObject Aparecer()
     {
-        if (HayEnemigoEnPantalla)
-            return;
-
         if (!EnFaseDeNotas)
         {
             Debug.Log("EnemyManager: no salen enemigos durante el puente, se ha ignorado la peticion.", this);
-            return;
+            return null;
         }
 
         if (PrefabEnemigo == null)
         {
             Debug.LogError("EnemyManager: falta asignar el prefab del enemigo en el Inspector.", this);
-            return;
+            return null;
         }
 
         if (Jugador == null)
         {
             Debug.LogError("EnemyManager: no se ha encontrado al jugador (tag '" + TagDelJugador + "').", this);
-            return;
+            return null;
         }
 
         GameObject instancia = Instantiate(PrefabEnemigo);
@@ -225,6 +222,8 @@ public class EnemyManager : MonoBehaviour
         enemigo.AlDesaparecer += OlvidarEnemigo;
 
         enemigo.Lanzar(Jugador, Random.value < 0.5f);
+
+        return instancia;
     }
 
     /// <summary>

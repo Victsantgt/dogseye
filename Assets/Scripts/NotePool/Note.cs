@@ -19,6 +19,8 @@ public class Note : MonoBehaviour, IPooleableObject
 
     public Transform perfectMark;
 
+    public EnemyRunner enemy;
+
     public bool Active
     {
         get => gameObject.activeSelf;
@@ -64,9 +66,9 @@ public class Note : MonoBehaviour, IPooleableObject
         
         HitResult result;
 
-        if (delta <= 0.5f) result = HitResult.Perfect;
-        else if (delta <= 1.5f) result = HitResult.Good;
-        else if (delta <= 2.2f) result = HitResult.Bad;
+        if (delta <= 0.8f) result = HitResult.Perfect;
+        else if (delta <= 2f) result = HitResult.Good;
+        else if (delta <= 2.5f) result = HitResult.Bad;
         else result = HitResult.Miss;
 
         SendHit(result != HitResult.Miss, result);

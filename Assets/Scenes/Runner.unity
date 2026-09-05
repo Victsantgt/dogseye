@@ -2261,8 +2261,8 @@ MonoBehaviour:
   Color: {r: 0.67295593, g: 0.6248859, b: 0.446521, a: 0.7882353}
   MaterialPersonalizado: {fileID: 0}
   Margen: {x: 0, y: 0}
-  Visible: 1
-  GizmoEnLaEscena: 1
+  Visible: 0
+  GizmoEnLaEscena: 0
 --- !u!1 &1160606397
 GameObject:
   m_ObjectHideFlags: 0
@@ -3966,12 +3966,28 @@ PrefabInstance:
       value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6690020784385776103, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: enemyPrefab
+      value: 
+      objectReference: {fileID: 173214691464615192, guid: e1a723384d6277f498a137f4becb4b08, type: 3}
+    - target: {fileID: 6690020784385776103, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: enemyManager
+      value: 
+      objectReference: {fileID: 180828828}
+    - target: {fileID: 6690020784385776103, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: enemySpawnPoint
+      value: 
+      objectReference: {fileID: 180828824}
+    - target: {fileID: 6690020784385776103, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
       propertyPath: laneRightDestiny
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6805692112045165949, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
       propertyPath: filename
       value: chart1.json
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799333649885883411, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 14.75
       objectReference: {fileID: 0}
     - target: {fileID: 8688966487308307856, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
       propertyPath: m_RenderPostProcessing
