@@ -631,6 +631,7 @@ GameObject:
   - component: {fileID: 180828826}
   - component: {fileID: 180828827}
   - component: {fileID: 180828828}
+  - component: {fileID: 180828829}
   m_Layer: 0
   m_Name: LevelController
   m_TagString: Untagged
@@ -799,6 +800,22 @@ MonoBehaviour:
   TeclaAparecer: 36
   TeclaVencer: 16
   TeclaGanar: 28
+--- !u!114 &180828829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180828822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0e2bb098fca07a41bbba7027e44d055, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Generador: {fileID: 180828823}
+  BotonIzquierda: {fileID: 629867901}
+  BotonDerecha: {fileID: 1006473010}
+  LogAlCambiar: 1
 --- !u!1001 &198877471
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1630,6 +1647,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 460534166}
   m_CullTransparentMesh: 1
+--- !u!1 &629867901 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 33039091777957122, guid: 9e303c8c109535446988dec1ebd523d0, type: 3}
+  m_PrefabInstance: {fileID: 1965181503}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &706128234
 GameObject:
   m_ObjectHideFlags: 0
@@ -2099,6 +2121,11 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &1006473010 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 994596813619942990, guid: 42dfea64b863f994ca3bfaee69e78c09, type: 3}
+  m_PrefabInstance: {fileID: 343437071}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1071489726 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8482132767782522888, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
@@ -2153,7 +2180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8f52b5015c37e843b612f0f3f7f4131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Color: {r: 0.67295593, g: 0.6248859, b: 0.446521, a: 0}
+  Color: {r: 0.67295593, g: 0.6248859, b: 0.446521, a: 0.7882353}
   MaterialPersonalizado: {fileID: 0}
   Margen: {x: 0, y: 0}
   Visible: 1

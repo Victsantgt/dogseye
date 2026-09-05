@@ -13,11 +13,17 @@ public class NoteSpawner : MonoBehaviour
     public Transform laneRightDestiny;
     public Transform laneRightPerfect;
 
-    //Para el patrón observer
+    //Para el patrï¿½n observer
     public NoteHitSubject subject; 
 
     public void Spawn(string position)
     {
+        // [ANADIDO: carriles laterales] En un pasillo Narrow no hay carril izquierdo ni
+        // derecho, asi que esas notas ni salen del pool. El ChartManager avanza igual su
+        // puntero, o sea que la nota se pierde y el chart sigue en hora. Sin el
+        // componente CarrilesLaterales en la escena esto devuelve siempre true.
+        if (!CarrilesLaterales.Permite(position)) return;
+
         Note note = pool.GetNote(position);
 
         //asignamos el subject a cada nota que sale del pool

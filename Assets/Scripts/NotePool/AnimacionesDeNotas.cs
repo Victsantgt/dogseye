@@ -168,9 +168,15 @@ public class AnimacionesDeNotas : MonoBehaviour
 
     void Update()
     {
-        if (Pulsada(TeclaIzquierda)) DispararIzquierda();
+        // [ANADIDO: carriles laterales] En un pasillo Narrow no hay lados, asi que la A
+        // y la D tampoco lanzan su gesto: el HUD, el input y la animacion dicen lo mismo.
+        // El del medio no se filtra nunca. Sin el componente CarrilesLaterales en la
+        // escena esto devuelve siempre true y no cambia nada.
+        bool hayLados = CarrilesLaterales.LateralesActivos;
+
+        if (hayLados && Pulsada(TeclaIzquierda)) DispararIzquierda();
         if (Pulsada(TeclaCentro)) DispararCentro();
-        if (Pulsada(TeclaDerecha)) DispararDerecha();
+        if (hayLados && Pulsada(TeclaDerecha)) DispararDerecha();
     }
 
     void LateUpdate()

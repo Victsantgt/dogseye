@@ -38,8 +38,16 @@ public class ColliderNoteScript : MonoBehaviour
 
     private void Update()
     {
+        // El carril del medio siempre vale, en Narrow y en Wide.
         if (noteMiddle.action.WasPressedThisFrame() && middleNote != null)
             Hit(ref middleNote);
+
+        // [ANADIDO: carriles laterales] En Narrow la A y la D no aciertan nada. Con las
+        // notas laterales ya cortadas en el NoteSpawner esto casi nunca llega a hacer
+        // falta, pero cubre el caso de que quedara una nota lateral en vuelo al cambiar
+        // de terreno. Sin el componente en la escena devuelve siempre true.
+        if (!CarrilesLaterales.LateralesActivos) return;
+
         if (noteLeft.action.WasPressedThisFrame() && leftNote != null)
             Hit(ref leftNote);
         if (noteRight.action.WasPressedThisFrame() && rightNote != null)
