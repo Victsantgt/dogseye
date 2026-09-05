@@ -8,6 +8,7 @@ public class Transitions : MonoBehaviour
 {
     public Image transitionImage;
     public ChartManager chart;
+    private int currentSection;
 
     private void Start()
     {

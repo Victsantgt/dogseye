@@ -3,7 +3,7 @@ using System.IO;
 
 public class ChartLoader : MonoBehaviour
 {
-    public ChartData Load(string filename)
+    public ChartData Load(string filename, float extraTime)
     {
         string path = Path.Combine(Application.streamingAssetsPath, filename);
 
@@ -16,7 +16,7 @@ public class ChartLoader : MonoBehaviour
         string json = File.ReadAllText(path);
         ChartData chart = JsonUtility.FromJson<ChartData>(json);
 
-        chart.TransformTimes();
+        chart.TransformTimes(extraTime);
 
         return chart;
     }

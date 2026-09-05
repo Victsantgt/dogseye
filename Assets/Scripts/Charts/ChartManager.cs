@@ -49,9 +49,9 @@ public class ChartManager : MonoBehaviour
 
     public void NextSection(string newFilename)
     {
-        chart = loader.Load(newFilename);
-        nextNote = 0;
         currentTime = Time.timeSinceLevelLoad;
+        chart = loader.Load(newFilename, currentTime);
+        nextNote = 0;
         MusicManager.Instance.SetTimeSinceBegin(currentTime);
         MusicManager.Instance.ReturnToDefault();
         chartActive = true;
