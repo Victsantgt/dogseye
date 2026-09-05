@@ -29,7 +29,7 @@ public class DecisionManager : MonoBehaviour
     [Tooltip("Segundos que tiene el jugador para elegir. Al llegar a 0 se escoge una opcion al azar.")]
     public float SegundosParaElegir = 5f;
 
-    [Tooltip("Opcional: etiqueta donde se muestra la cuenta atrás. Puede quedar vacía.")]
+    [Tooltip("Opcional: etiqueta donde se muestra la cuenta atrï¿½s. Puede quedar vacï¿½a.")]
     public TextMeshProUGUI TextoCuentaAtras;
 
     bool puedeElegir;
@@ -214,10 +214,20 @@ public class DecisionManager : MonoBehaviour
         preguntaActiva = false;
         OcultarSecuenciaTelefono();
 
-        // Solo se apunta. La partida no acaba aqui: acaba en la pregunta siguiente,
-        // o sea cuando termine la seccion musical que el jugador esta a punto de jugar.
         if (Final != null)
             Final.RegistrarDecision(elegida);
+
+        // [CAMBIO: el final vuelve a saltar al contestar]
+        // Antes esto solo apuntaba la decision y la partida seguia: el final llegaba en
+        // la pregunta SIGUIENTE, o sea que el jugador se jugaba entera una seccion
+        // musical mas despues de la ultima respuesta. Ahora, en cuanto se contesta la
+        // decision numero DecisionesParaFinal, se va directo al fundido en blanco.
+        //
+        // El return corta aqui a proposito: nos saltamos el cambio de terreno, el
+        // aceleron y el puente, que no tendrian a donde llevar. La pregunta ya se ha
+        // ocultado arriba, en OcultarSecuenciaTelefono().
+        if (Final != null && Final.IntentarTerminar())
+            return;
 
         // Buena tiende a Narrow, Mala tiende a Wide.
         // Si el generador ya esta en ese tipo no hace nada y sigue su ritmo normal;

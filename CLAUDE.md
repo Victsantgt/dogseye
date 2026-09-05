@@ -56,8 +56,11 @@ Si añades otro efecto al puente, engánchalo al mismo sitio.
 - **`MusicManager` y `GameConfig` son `ASingleton` con `DontDestroyOnLoad`.**
   Sobreviven a la recarga de escena y `ASingleton` no limpia `Instance` en
   `OnDestroy`. No los destruyas: usa `StopMusic()` o `FadeOut()`.
-- **El final de partida salta en `LanzarPregunta()`**, no al contestar. Eso
-  significa que la tecla P también termina la partida si ya hay 3 decisiones.
+- **El final de partida salta al CONTESTAR la última pregunta**, dentro de
+  `Resolver()`: se va directo al fundido en blanco, sin cambio de terreno ni
+  sección musical extra. `LanzarPregunta()` sigue llamando a `IntentarTerminar()`
+  como red de seguridad, para que la tecla P no saque una pregunta con la partida
+  ya acabada.
 - **`Transitions.WinTransition()` y `LoseTransition()` cargan escenas `"Victoria"`
   y `"Derrota"` que no existen** en el proyecto. Si algo las llama, peta.
 - Al reinstanciar componentes en el Player, ojo con los duplicados: dos
