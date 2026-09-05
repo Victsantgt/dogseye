@@ -39,4 +39,15 @@ public class BubbleText : MonoBehaviour
         if (dialogue != null)
             dialogue.StartDialogue();
     }
+
+    public void Hide()
+    {
+        if (rectTransform != null)
+            rectTransform.DOKill();
+
+        if (gameObject.activeSelf)
+            gameObject.SetActive(false);
+
+        dialogue.dialogueText.text = "";
+    }
 }
