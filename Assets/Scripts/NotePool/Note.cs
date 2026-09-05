@@ -66,7 +66,7 @@ public class Note : MonoBehaviour, IPooleableObject
         
         HitResult result;
 
-        if (delta <= 0.8f) result = HitResult.Perfect;
+        if (delta <= 0.8f) result = HitResult.Perfect; 
         else if (delta <= 2f) result = HitResult.Good;
         else if (delta <= 2.5f) result = HitResult.Bad;
         else result = HitResult.Miss;
@@ -74,8 +74,17 @@ public class Note : MonoBehaviour, IPooleableObject
         SendHit(result != HitResult.Miss, result);
         Debug.Log("DISTANCIA DESTINO NOTA: " + delta + "RESULTADO:" + result);
 
-        // devolver al pool
-        Active = false;
+        if (result == HitResult.Perfect || result == HitResult.Good)
+        {
+            if (enemy != null) enemy.Vencer();
+        }
+        else
+        {
+            if (enemy != null) enemy.RetirarseYa();
+        }
+
+            // devolver al pool
+            Active = false;
     }
 
     // notifica el resultado
