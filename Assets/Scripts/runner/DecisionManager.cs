@@ -11,7 +11,7 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class DecisionManager : MonoBehaviour
 {
-    public enum Opcion { Buena, Mala }
+    public enum Opcion { Derecha, Izquierda }
 
     [SerializeField] private InputActionReference leftDecision;
     [SerializeField] private InputActionReference rightDecision;
@@ -34,12 +34,11 @@ public class DecisionManager : MonoBehaviour
 
     bool puedeElegir;
 
-    [Header("Texto de la respuesta (durante el puente)")]
-    [Tooltip("Texto que sale al elegir la opcion BUENA (flecha izquierda).")]
-    [TextArea] public string TextoOpcionBuena = "accion buena";
+    [Header("Textos de las opciones")]
+    [SerializeField] public string[] TextoOpcionDerecha;
+    [SerializeField] public string[] TextoOpcionIzquierda;
 
-    [Tooltip("Texto que sale al elegir la opcion MALA (flecha derecha).")]
-    [TextArea] public string TextoOpcionMala = "accion mala";
+    private int index = 0;
 
     [Tooltip("Etiqueta donde se escribe el texto de la respuesta.")]
     public TextMeshProUGUI TextoRespuestaUI;
@@ -181,14 +180,14 @@ public class DecisionManager : MonoBehaviour
         if (tiempoRestante <= 0f)
         {
             // Se acabo el tiempo: elegimos al azar entre las dos opciones
-            Opcion azar = Random.value < 0.5f ? Opcion.Buena : Opcion.Mala;
+            Opcion azar = Random.value < 0.5f ? Opcion.Derecha : Opcion.Izquierda;
             Resolver(azar, true);
         }
     }
 
     bool LeerTecla(out Opcion elegida)
     {
-        elegida = Opcion.Buena;
+        elegida = Opcion.Derecha;
 
         Keyboard teclado = Keyboard.current;
         if (teclado == null)
@@ -196,13 +195,13 @@ public class DecisionManager : MonoBehaviour
 
         if (leftDecision.action.WasPressedThisFrame())
         {
-            elegida = Opcion.Buena;
+            elegida = Opcion.Derecha;
             return true;
         }
 
         if (rightDecision.action.WasPressedThisFrame())
         {
-            elegida = Opcion.Mala;
+            elegida = Opcion.Izquierda;
             return true;
         }
 
@@ -232,7 +231,7 @@ public class DecisionManager : MonoBehaviour
         // Buena tiende a Narrow, Mala tiende a Wide.
         // Si el generador ya esta en ese tipo no hace nada y sigue su ritmo normal;
         // si no, mete la transicion al instante y cambia el tipo a partir de ahi.
-        TipoSegmento objetivo = elegida == Opcion.Buena ? TipoSegmento.Narrow : TipoSegmento.Wide;
+        TipoSegmento objetivo = elegida == Opcion.Derecha ? TipoSegmento.Narrow : TipoSegmento.Wide;
 
         bool hayTransicion = false;
         if (Generador != null)
@@ -278,8 +277,12 @@ public class DecisionManager : MonoBehaviour
     /// </summary>
     void MostrarRespuesta(Opcion elegida)
     {
-        if (TextoRespuestaUI != null)
-            TextoRespuestaUI.text = elegida == Opcion.Buena ? TextoOpcionBuena : TextoOpcionMala;
+        if (TextoRespuestaUI != null) 
+        {
+            TextoRespuestaUI.text = elegida == Opcion.Derecha ? TextoOpcionIzquierda[index] : TextoOpcionDerecha[index];
+            index++;
+        }
+            
 
         if (PanelRespuesta != null)
             PanelRespuesta.SetActive(true);
