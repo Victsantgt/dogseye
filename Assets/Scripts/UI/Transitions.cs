@@ -8,6 +8,7 @@ public class Transitions : MonoBehaviour
 {
     public Image transitionImage;
     public ChartManager chart;
+    public DecisionManager decision;
     private int currentSection;
 
     private void Start()
@@ -35,9 +36,6 @@ public class Transitions : MonoBehaviour
 
     public void NextTransition()
     {
-        Debug.Log("siguiente parte");
-        Sequence seq = DOTween.Sequence();
-        seq.AppendInterval(1);
-        seq.AppendCallback(() => { chart.NextSection("test2.json"); });
+        decision.LanzarPregunta();
     }
 }

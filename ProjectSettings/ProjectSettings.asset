@@ -678,11 +678,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 9cfe3c48-d1d7-4447-b77b-afe0c5d2c5e1
+  cloudProjectId: e7dbc7a0-565e-4921-af3e-8d6baa2a7ad7
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: dogseye
-  organizationId: adrian-garcia
+  projectName: dogseye 2026-09-04_19-40-07
+  organizationId: victsantgt
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

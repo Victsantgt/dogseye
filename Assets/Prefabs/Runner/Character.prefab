@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: 1591134152834062666}
   - component: {fileID: 4852618863787711520}
   - component: {fileID: 1092407660185175746}
+  - component: {fileID: 1507611146167462089}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -184,7 +185,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f7e0ce8fc717384ea9008d63a5fcee9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerSpeed: 0.1
+  PlayerSpeed: 24
+--- !u!114 &1507611146167462089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5895062542079577123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d357043b77a23814aa773c182de305f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MultiplicadorMaximo: 2.5
+  Duracion: 3
+  Curva:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.25
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.75
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  Movimiento: {fileID: 1092407660185175746}
 --- !u!1 &5936736853624635987
 GameObject:
   m_ObjectHideFlags: 0

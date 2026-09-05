@@ -70,6 +70,7 @@ public class RhythmSystemToggle : MonoBehaviour
                 chart.SaltarNotasPasadas();
 
             chart.chartActive = true;
+            chart.NextSection("test2.json");
         }
     }
 }
