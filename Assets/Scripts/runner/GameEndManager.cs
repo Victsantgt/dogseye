@@ -27,7 +27,7 @@ public class GameEndManager : MonoBehaviour
     }
 
     [Header("Cuando termina")]
-    [Tooltip("Decisiones que se juegan. La partida NO acaba al contestar la ultima, sino en la pregunta siguiente: el jugador se juega entera esa ultima seccion musical y el final llega cuando esa seccion termina.")]
+    [Tooltip("Decisiones que se juegan. La partida acaba en cuanto se CONTESTA la ultima: se va directa al fundido en blanco, sin cambio de terreno ni seccion musical extra.")]
     public int DecisionesParaFinal = 3;
 
     [Header("Fundido a blanco")]
@@ -111,7 +111,8 @@ public class GameEndManager : MonoBehaviour
 
     /// <summary>
     /// La llama el DecisionManager cada vez que se resuelve una pregunta.
-    /// Solo apunta la decision: no termina la partida.
+    /// Solo apunta la decision. Quien remata es IntentarTerminar(), que el
+    /// DecisionManager llama justo despues de esta.
     /// </summary>
     public void RegistrarDecision(DecisionManager.Opcion elegida)
     {
@@ -121,12 +122,16 @@ public class GameEndManager : MonoBehaviour
     }
 
     /// <summary>
-    /// La llama el DecisionManager justo ANTES de sacar una pregunta. Si ya se han
-    /// jugado todas las decisiones, esa pregunta no llega a salir y en su lugar
-    /// arranca el final. Es lo que hace que la partida acabe al terminar la ultima
-    /// seccion musical y no en el momento de contestar.
+    /// Arranca el final si ya se han jugado todas las decisiones. Se llama desde dos
+    /// sitios del DecisionManager:
+    ///
+    ///   - En Resolver(), justo despues de apuntar la decision. Es el camino normal:
+    ///     al contestar la ultima pregunta la partida termina ahi mismo.
+    ///   - En LanzarPregunta(), antes de sacar una pregunta. Es una red de seguridad
+    ///     para que nadie (por ejemplo la tecla P) saque una pregunta con la partida
+    ///     ya terminada.
     /// </summary>
-    /// <returns>true si ha arrancado el final y por tanto no hay que mostrar la pregunta.</returns>
+    /// <returns>true si el final ya esta en marcha y por tanto hay que cortar lo que se estuviera haciendo.</returns>
     public bool IntentarTerminar()
     {
         if (terminado) return true;
