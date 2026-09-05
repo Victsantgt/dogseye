@@ -7,7 +7,7 @@ public enum EstadoEnemigo
 {
     Inactivo,       // recien instanciado, todavia no le han dicho de donde viene
     Aproximandose,  // sale de la niebla y se echa encima del jugador
-    Acompanando,    // ya esta al lado (o delante) y va a la misma velocidad
+    Acompanando,    // ya esta al lado (o delante), a la misma velocidad media, bamboleandose
     Vencido,        // le hemos apartado: se va hacia arriba
     Retirandose     // nos ha ganado: se vuelve por donde vino
 }
@@ -59,6 +59,16 @@ public class EnemyRunner : MonoBehaviour
     [Tooltip("Segundos que tarda en asentarse en el sitio una vez ha frenado.")]
     public float SuavizadoDeFrenado = 0.35f;
 
+    [Header("Bamboleo mientras acompana")]
+    [Tooltip("Cuanto se adelanta y se atrasa respecto a su distancia de acompanamiento. Con 1.2 sobre una distancia de 8, el hueco va y viene entre 6.8 y 9.2.")]
+    public float AmplitudDelBamboleo = 1.2f;
+
+    [Tooltip("Vaivenes completos por segundo. Cuanto mas bajo, mas perezoso.")]
+    public float FrecuenciaDelBamboleo = 0.55f;
+
+    [Tooltip("Segundos que tarda el bamboleo en alcanzar su amplitud entera al llegar. Sin esto se notaria el tiron justo cuando termina de frenar.")]
+    public float EntradaDelBamboleo = 0.8f;
+
     [Header("Velocidades (relativas al jugador, no de mundo)")]
     [Tooltip("A que ritmo recorta la distancia mientras sale de la niebla.")]
     public float VelocidadDeAcercamiento = 140f;
@@ -97,6 +107,7 @@ public class EnemyRunner : MonoBehaviour
     float signoDeEntrada;     // lado que le toco en el sorteo. En Narrow no mueve el carril, pero marca hacia donde le apartamos al vencerle.
     float velocidadFrenado;   // memoria del SmoothDamp
     bool frenando;            // ya ha entrado en el tramo de frenado
+    float tiempoAcompanando;  // reloj del bamboleo, arranca a 0 al llegar
     bool despawnProgramado;
 
     /// <summary>En que punto de su vida esta.</summary>
@@ -159,6 +170,7 @@ public class EnemyRunner : MonoBehaviour
         desplazamiento = new Vector3(lateralDeEntrada, AlturaSobreElJugador, DistanciaDeAparicion);
         velocidadFrenado = 0f;
         frenando = false;
+        tiempoAcompanando = 0f;
         estado = EstadoEnemigo.Aproximandose;
 
         Recolocar();
@@ -243,7 +255,7 @@ public class EnemyRunner : MonoBehaviour
         switch (estado)
         {
             case EstadoEnemigo.Aproximandose: Aproximarse(dt); break;
-            case EstadoEnemigo.Acompanando:   /* el desplazamiento se queda quieto */ break;
+            case EstadoEnemigo.Acompanando:   Bambolearse(dt); break;
             case EstadoEnemigo.Vencido:       SalirPorArriba(dt); break;
             case EstadoEnemigo.Retirandose:   VolverPorDondeVino(dt); break;
         }
@@ -278,12 +290,32 @@ public class EnemyRunner : MonoBehaviour
             if (Mathf.Abs(desplazamiento.z - DistanciaAlAcompanar) < 0.15f)
             {
                 desplazamiento.z = DistanciaAlAcompanar;
+                tiempoAcompanando = 0f;
                 estado = EstadoEnemigo.Acompanando;
             }
         }
 
         // El carril no se toca durante el acercamiento: viene recto por el suyo, sea
         // el lateral de un Wide o el centro de un Narrow.
+    }
+
+    /// <summary>
+    /// Vaiven de la distancia mientras acompana, para que no se quede clavado como si
+    /// estuviera pegado al jugador: el hueco se cierra un poco (le alcanzamos) y se
+    /// vuelve a abrir (aprieta y se escapa). La velocidad media sigue siendo la del
+    /// jugador, solo oscila alrededor de DistanciaAlAcompanar.
+    /// </summary>
+    void Bambolearse(float dt)
+    {
+        tiempoAcompanando += dt;
+
+        // La amplitud entra poco a poco. El seno vale 0 en t=0 y la rampa tambien,
+        // asi que el enemigo sale del frenado con velocidad relativa 0 y no da el tiron
+        // que daria arrancando la onda a plena amplitud.
+        float rampa = EntradaDelBamboleo <= 0f ? 1f : Mathf.Clamp01(tiempoAcompanando / EntradaDelBamboleo);
+        float onda = Mathf.Sin(tiempoAcompanando * 2f * Mathf.PI * FrecuenciaDelBamboleo);
+
+        desplazamiento.z = DistanciaAlAcompanar + onda * AmplitudDelBamboleo * rampa;
     }
 
     void SalirPorArriba(float dt)
