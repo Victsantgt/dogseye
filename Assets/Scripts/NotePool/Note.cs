@@ -64,9 +64,9 @@ public class Note : MonoBehaviour, IPooleableObject
         
         HitResult result;
 
-        if (delta <= 70f) result = HitResult.Perfect;
-        else if (delta <= 70.5f) result = HitResult.Good;
-        else if (delta <= 71.5f) result = HitResult.Bad;
+        if (delta <= 0.5f) result = HitResult.Perfect;
+        else if (delta <= 2.2f) result = HitResult.Good;
+        else if (delta <= 3.2f) result = HitResult.Bad;
         else result = HitResult.Miss;
 
         SendHit(result != HitResult.Miss, result);
