@@ -329,7 +329,7 @@ MonoBehaviour:
   TeclaPregunta: 30
   SegundosParaElegir: 5
   Generador: {fileID: 180828823}
-  Aceleron: {fileID: 1814972496}
+  Aceleron: {fileID: 1814972498}
   SistemaNotas: {fileID: 180828826}
 --- !u!114 &180828826
 MonoBehaviour:
@@ -765,63 +765,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eeaf9a1108588d641a099bd6706d14e4, type: 3}
---- !u!1 &1814972491 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5895062542079577123, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+--- !u!114 &1814972498 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1507611146167462089, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
   m_PrefabInstance: {fileID: 6604563331624544902}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1814972495 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1092407660185175746, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
-  m_PrefabInstance: {fileID: 6604563331624544902}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1814972491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3f7e0ce8fc717384ea9008d63a5fcee9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1814972496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1814972491}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d357043b77a23814aa773c182de305f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MultiplicadorMaximo: 2.5
-  TiempoSubida: 0.6
-  TiempoBajada: 0.8
-  CurvaSubida:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  SegundosDeSeguridad: 20
-  Movimiento: {fileID: 1814972495}
 --- !u!1 &1827096938
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,10 +1170,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5895062542079577123, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1814972496}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

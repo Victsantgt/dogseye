@@ -13,6 +13,9 @@ public class RushStopTrigger : MonoBehaviour
     [Tooltip("Tag del jugador. El prefab Character debe tener este tag asignado.")]
     public string PlayerTag = "Player";
 
+    [Tooltip("Deja rastro en consola al dispararse. Util para comprobar que el frenado entra cuando toca.")]
+    public bool LogAlDispararse = true;
+
     bool disparado;
 
     void Reset()
@@ -34,9 +37,17 @@ public class RushStopTrigger : MonoBehaviour
             rush = FindFirstObjectByType<TransitionRush>();
 
         if (rush != null)
+        {
             rush.Detener();
+
+            if (LogAlDispararse)
+                Debug.Log("RushStopTrigger disparado en z=" + transform.position.z.ToString("F1")
+                    + " por '" + other.name + "'. Aceleron activo=" + rush.Activo, this);
+        }
         else
+        {
             Debug.LogError("RushStopTrigger: no se ha encontrado ningun TransitionRush.", this);
+        }
     }
 
     bool EsJugador(Collider other)

@@ -11,6 +11,10 @@ using UnityEngine;
 ///
 /// Va en el mismo GameObject que BasicMovement (el Player).
 /// </summary>
+// Dos TransitionRush en el mismo objeto se pisan: los dos escriben
+// SetMultiplicador() cada frame y Detener() solo afecta a uno, asi que el otro
+// mantiene la velocidad alta para siempre. Unity ya no deja anadir un segundo.
+[DisallowMultipleComponent]
 public class TransitionRush : MonoBehaviour
 {
     [Tooltip("Cuanto se multiplica la velocidad mientras dura el aceleron. 1 = sin efecto.")]
