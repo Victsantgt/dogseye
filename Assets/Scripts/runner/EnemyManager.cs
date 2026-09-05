@@ -38,7 +38,7 @@ public class EnemyManager : MonoBehaviour
 
     [Header("Cuando aparece")]
     [Tooltip("Si se engancha solo a la fase de notas. Desmarcalo si prefieres controlar la aparicion tu, llamando a Aparecer() desde el sistema de notas.")]
-    public bool AparicionAutomatica = true;
+    public bool AparicionAutomatica = false;
 
     [Tooltip("Segundos que tarda en volver otro enemigo despues de que le vencieran o de que nos ganara.")]
     public float SegundosParaReaparecer = 5f;
@@ -240,7 +240,7 @@ public class EnemyManager : MonoBehaviour
             return;
 
         enemigoActual.Vencer();
-        ProgramarAparicion(SegundosParaReaparecer);
+        //ProgramarAparicion(SegundosParaReaparecer);
     }
 
     /// <summary>
@@ -255,7 +255,7 @@ public class EnemyManager : MonoBehaviour
             return;
 
         enemigoActual.Ganar();
-        ProgramarAparicion(SegundosParaReaparecer);
+        //ProgramarAparicion(SegundosParaReaparecer);
     }
 
     /// <summary>Quita el enemigo de en medio al instante, sin animacion ni reaparicion.</summary>

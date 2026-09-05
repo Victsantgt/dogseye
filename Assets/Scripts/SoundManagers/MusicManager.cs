@@ -84,12 +84,14 @@ namespace Patterns.Singleton
 
         public void ReturnToDefault(bool dynamic = false)
         {
-            if (isMusicPlaying) SwapTrack(defaultClip, dynamic, getVolume());
-            else
-            {
-                StopMusic();
-                musicStart();
-            }
+            StartCoroutine(ReturnDefaultCoroutine());
+        }
+
+        public IEnumerator ReturnDefaultCoroutine()
+        {
+            FadeOut();
+            yield return new WaitForSeconds(1.5f);
+            musicStart();
         }
 
         public float GetTime() { return track01.time; }

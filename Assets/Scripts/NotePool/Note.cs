@@ -60,13 +60,13 @@ public class Note : MonoBehaviour, IPooleableObject
     public void OnPlayerHit()
     {
         //diferencia de tiempo para saber el rango de la nota
-        float delta = Vector3.Distance(perfectMark.transform.position, transform.position);
+        float delta = Mathf.Abs(perfectMark.transform.position.z - transform.position.z);
         
         HitResult result;
 
         if (delta <= 0.5f) result = HitResult.Perfect;
-        else if (delta <= 2.2f) result = HitResult.Good;
-        else if (delta <= 3.2f) result = HitResult.Bad;
+        else if (delta <= 1.5f) result = HitResult.Good;
+        else if (delta <= 2.2f) result = HitResult.Bad;
         else result = HitResult.Miss;
 
         SendHit(result != HitResult.Miss, result);

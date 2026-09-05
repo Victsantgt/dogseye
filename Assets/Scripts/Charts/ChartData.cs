@@ -10,9 +10,10 @@ public class ChartData
         for (int i = 0; i < notes.Length; i++)
         {
             float noteSpeed = GameConfig.Instance.GetNoteSpeed();
-            notes[i].time += 60f / GameConfig.Instance.GetBPM() * 14f;
             notes[i].time -= noteSpeed;
             notes[i].time += startDelay;
+            if (notes[i].lane == "Middle") notes[i].time -= 2;
+            else notes[i].time += 2.5f;
         }
     }
 
