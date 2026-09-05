@@ -70,7 +70,14 @@ public class RhythmSystemToggle : MonoBehaviour
                 chart.SaltarNotasPasadas();
 
             chart.chartActive = true;
-            chart.NextSection("test2.json");
+
+            // [ANADIDO: musica por seccion] Antes aqui habia un "test2.json" fijo, asi
+            // que todas las secciones reusaban el mismo chart pasara lo que pasara.
+            // Ahora se usa el filename que tenga puesto el ChartManager, que es lo que
+            // MusicaPorSeccion deja preparado al contestar la pregunta, emparejado con
+            // la cancion que va a sonar. Si nadie lo toca, sigue valiendo el que este
+            // escrito en el Inspector.
+            chart.NextSection(chart.filename);
         }
     }
 }

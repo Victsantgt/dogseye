@@ -632,6 +632,7 @@ GameObject:
   - component: {fileID: 180828827}
   - component: {fileID: 180828828}
   - component: {fileID: 180828829}
+  - component: {fileID: 180828830}
   m_Layer: 0
   m_Name: LevelController
   m_TagString: Untagged
@@ -815,6 +816,52 @@ MonoBehaviour:
   Generador: {fileID: 180828823}
   BotonIzquierda: {fileID: 629867901}
   BotonDerecha: {fileID: 1006473010}
+  LogAlCambiar: 1
+--- !u!114 &180828830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180828822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9bd64c6ce32942f41884d8b32e451436, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Seccion1:
+    Musica: {fileID: 8300000, guid: 3c3482eead99b024f9b3df249cb87ccb, type: 3}
+    Chart: chart1.json
+  Intermision: {fileID: 8300000, guid: 57de19b553d975449bcb05122631a780, type: 3}
+  SeccionesSiguientes:
+  - Nombre: Seccion 2
+    Buena:
+      Musica: {fileID: 8300000, guid: 3251c36044caf5646b957211a619ed53, type: 3}
+      Chart: chart2.json
+    Mala:
+      Musica: {fileID: 8300000, guid: a8c43902c30cfda40a33df5ecb8a1dab, type: 3}
+      Chart: chart2Malo.json
+  - Nombre: Seccion 3
+    Buena:
+      Musica: {fileID: 8300000, guid: 43b1e7c1d2fbafc44b8a3f37d400c9df, type: 3}
+      Chart: chart3.json
+    Mala:
+      Musica: {fileID: 8300000, guid: b3e4d17f560e2fc4a9e26702e96963dc, type: 3}
+      Chart: chart3Malo.json
+  ModoDePruebas: 0
+  PruebasSeccion1:
+    Musica: {fileID: 8300000, guid: 68cdabd0c83cfbf42b33b5fdf93abbd1, type: 3}
+    Chart: test1.json
+  PruebasSecciones:
+  - Musica: {fileID: 8300000, guid: a67c2078664ac8540a2ec9a2dbe2e771, type: 3}
+    Chart: test2.json
+  - Musica: {fileID: 8300000, guid: 10d9253b3fb9b414e87730a7b8430ad7, type: 3}
+    Chart: test2.json
+  SaltarIntermisionEnPruebas: 1
+  Decisiones: {fileID: 180828825}
+  Final: {fileID: 180828827}
+  Chart: {fileID: 975049653}
+  FundirAlTerminar: 1
   LogAlCambiar: 1
 --- !u!1001 &198877471
 PrefabInstance:
@@ -1951,6 +1998,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1117176948030042031, guid: 6d73ab99eccfd3a4ea93ac26ac5849d9, type: 3}
+      propertyPath: defaultClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 68cdabd0c83cfbf42b33b5fdf93abbd1, type: 3}
     - target: {fileID: 8240215118148071182, guid: 6d73ab99eccfd3a4ea93ac26ac5849d9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2121,6 +2172,17 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!114 &975049653 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6805692112045165949, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+  m_PrefabInstance: {fileID: 6604563331624544902}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c05f4a0c5ad884bb1d2802e0bb5eb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1006473010 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 994596813619942990, guid: 42dfea64b863f994ca3bfaee69e78c09, type: 3}
