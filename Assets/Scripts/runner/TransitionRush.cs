@@ -2,32 +2,41 @@ using System.Collections;
 using UnityEngine;
 
 /// <summary>
-/// Aceleron temporal del jugador para el puente musical entre secciones.
-/// Se lanza al resolverse la pregunta del DecisionManager: recorta la distancia
-/// que queda hasta el siguiente segmento y ademas se lee como algo intencionado
-/// en vez de como una espera muerta.
+/// Aceleron del jugador para el puente entre secciones.
+///
+/// Ya no dura un tiempo fijo: sube hasta MultiplicadorMaximo, se mantiene ahi todo
+/// lo que haga falta, y solo frena cuando el RushStopTrigger del prefab de transicion
+/// llama a Detener(). Asi el aceleron dura exactamente lo que tarde el jugador en
+/// llegar al segmento de transicion, sea la distancia que sea.
 ///
 /// Va en el mismo GameObject que BasicMovement (el Player).
 /// </summary>
 public class TransitionRush : MonoBehaviour
 {
-    [Tooltip("Cuanto se multiplica la velocidad en el pico del aceleron. 1 = sin efecto.")]
+    [Tooltip("Cuanto se multiplica la velocidad mientras dura el aceleron. 1 = sin efecto.")]
     public float MultiplicadorMaximo = 2.5f;
 
-    [Tooltip("Duracion total del aceleron en segundos. Ajustalo al largo del puente musical.")]
-    public float Duracion = 3f;
+    [Tooltip("Segundos que tarda en alcanzar el multiplicador maximo.")]
+    public float TiempoSubida = 0.6f;
 
-    [Tooltip("Forma del aceleron a lo largo de la Duracion. Eje Y: 0 = velocidad normal, 1 = MultiplicadorMaximo.")]
-    public AnimationCurve Curva = new AnimationCurve(
-        new Keyframe(0f, 0f),
-        new Keyframe(0.25f, 1f),
-        new Keyframe(0.75f, 1f),
-        new Keyframe(1f, 0f));
+    [Tooltip("Segundos que tarda en volver a la velocidad normal cuando se llama a Detener().")]
+    public float TiempoBajada = 0.8f;
+
+    [Tooltip("Forma de la subida. Eje Y: 0 = velocidad normal, 1 = MultiplicadorMaximo.")]
+    public AnimationCurve CurvaSubida = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
+    [Tooltip("Red de seguridad en segundos por si el jugador nunca llega a cruzar el RushStopTrigger. 0 = sin limite.")]
+    public float SegundosDeSeguridad = 20f;
 
     [Tooltip("Si se deja vacio se busca el BasicMovement de este mismo GameObject.")]
     public BasicMovement Movimiento;
 
     Coroutine rutina;
+    bool pararSolicitado;
+    float multiplicadorActual = 1f;
+
+    /// <summary>True mientras el aceleron esta en marcha (subiendo, sostenido o bajando).</summary>
+    public bool Activo { get { return rutina != null; } }
 
     void Awake()
     {
@@ -36,7 +45,8 @@ public class TransitionRush : MonoBehaviour
     }
 
     /// <summary>
-    /// Arranca el aceleron. Si ya habia uno en marcha lo reinicia.
+    /// Arranca el aceleron. Se mantiene hasta que alguien llame a Detener()
+    /// (normalmente el RushStopTrigger del segmento de transicion).
     /// </summary>
     [ContextMenu("Lanzar aceleron")]
     public void Lanzar()
@@ -50,10 +60,21 @@ public class TransitionRush : MonoBehaviour
         if (rutina != null)
             StopCoroutine(rutina);
 
+        pararSolicitado = false;
         rutina = StartCoroutine(Acelerar());
     }
 
-    /// <summary>Corta el aceleron y devuelve la velocidad a la normal.</summary>
+    /// <summary>
+    /// Pide el frenado suave. Lo llama el RushStopTrigger del prefab de transicion.
+    /// Si no hay aceleron en marcha no hace nada.
+    /// </summary>
+    [ContextMenu("Detener aceleron")]
+    public void Detener()
+    {
+        pararSolicitado = true;
+    }
+
+    /// <summary>Corta el aceleron de golpe y devuelve la velocidad a la normal.</summary>
     public void Cancelar()
     {
         if (rutina != null)
@@ -62,24 +83,56 @@ public class TransitionRush : MonoBehaviour
             rutina = null;
         }
 
+        multiplicadorActual = 1f;
         if (Movimiento != null)
             Movimiento.SetMultiplicador(1f);
     }
 
     IEnumerator Acelerar()
     {
+        // --- subida ---
         float t = 0f;
-
-        while (t < Duracion)
+        while (t < TiempoSubida && !pararSolicitado)
         {
             t += Time.deltaTime;
-            float progreso = Duracion <= 0f ? 1f : Mathf.Clamp01(t / Duracion);
-            float mezcla = Curva.Evaluate(progreso);
-            Movimiento.SetMultiplicador(Mathf.LerpUnclamped(1f, MultiplicadorMaximo, mezcla));
+            float p = TiempoSubida <= 0f ? 1f : Mathf.Clamp01(t / TiempoSubida);
+            Aplicar(Mathf.LerpUnclamped(1f, MultiplicadorMaximo, CurvaSubida.Evaluate(p)));
             yield return null;
         }
 
-        Movimiento.SetMultiplicador(1f);
+        // --- sostenido: aqui es donde se espera al RushStopTrigger ---
+        float sostenido = 0f;
+        while (!pararSolicitado)
+        {
+            if (SegundosDeSeguridad > 0f && sostenido >= SegundosDeSeguridad)
+            {
+                Debug.LogWarning("TransitionRush: se ha frenado por la red de seguridad, el jugador no llego a cruzar el RushStopTrigger.", this);
+                break;
+            }
+
+            sostenido += Time.deltaTime;
+            Aplicar(MultiplicadorMaximo);
+            yield return null;
+        }
+
+        // --- bajada ---
+        float desde = multiplicadorActual;
+        float t2 = 0f;
+        while (t2 < TiempoBajada)
+        {
+            t2 += Time.deltaTime;
+            float p = TiempoBajada <= 0f ? 1f : Mathf.Clamp01(t2 / TiempoBajada);
+            Aplicar(Mathf.Lerp(desde, 1f, p));
+            yield return null;
+        }
+
+        Aplicar(1f);
         rutina = null;
+    }
+
+    void Aplicar(float valor)
+    {
+        multiplicadorActual = valor;
+        Movimiento.SetMultiplicador(valor);
     }
 }
