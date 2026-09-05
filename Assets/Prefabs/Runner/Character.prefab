@@ -122,6 +122,7 @@ GameObject:
   - component: {fileID: 4852618863787711520}
   - component: {fileID: 1092407660185175746}
   - component: {fileID: 1507611146167462089}
+  - component: {fileID: 4940440757287095436}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -227,6 +228,66 @@ MonoBehaviour:
     m_RotationOrder: 4
   SegundosDeSeguridad: 20
   Movimiento: {fileID: 1092407660185175746}
+--- !u!114 &4940440757287095436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5895062542079577123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61d191f3d1bc29547b4e58ec7e258b98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UsarTeclaDePrueba: 1
+  TeclaDeMuerte: 27
+  MusicaAlMorir: 0
+  SegundosDeFrenado: 1.5
+  CurvaDeFrenado:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  PanelMuerte: {fileID: 0}
+  Negro: {fileID: 0}
+  GrupoTexto: {fileID: 0}
+  DuracionFundido: 1.2
+  DuracionFundidoTexto: 0.6
+  TextoMuerteUI: {fileID: 0}
+  TextoMuerte: Has perdido, pulsa R para empezar de nuevo
+  Reinicio: {fileID: 0}
+  TeclaReinicio: 32
+  Movimiento: {fileID: 1092407660185175746}
+  Aceleron: {fileID: 1507611146167462089}
+  Camara: {fileID: 903067966832029031}
+  SistemaNotas: {fileID: 0}
+  ComponentesADesactivar:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  ObjetosADesactivar:
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &5936736853624635987
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,6 +300,7 @@ GameObject:
   - component: {fileID: 9039393492254847834}
   - component: {fileID: 8446296588053812191}
   - component: {fileID: 8688966487308307856}
+  - component: {fileID: 903067966832029031}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -364,6 +426,33 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &903067966832029031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5936736853624635987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 876266524b9a3834e9d3a56ccb67874c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Activo: 1
+  Movimiento: {fileID: 1092407660185175746}
+  Aceleron: {fileID: 1507611146167462089}
+  DeltaFOV: 25
+  CompensacionDolly: 1
+  RetrocesoMaximo: 6
+  DesplazamientoExtra: {x: 0, y: 0, z: 0}
+  UmbralMinimo: 0.05
+  SuavizarIntensidad: 1
+  IntensidadManualMaxima: 1
+  TiempoSubidaManual: 0.4
+  TiempoBajadaManual: 0.6
+  DesplazarPuntoDeFuga: 1
+  AlturaPuntoDeFuga: -0.21
+  PuntoDeFugaSoloEnAceleron: 1
 --- !u!1001 &2059789449652523231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -376,6 +465,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: -- RHYTHM SYSTEM --
       objectReference: {fileID: 0}
+    - target: {fileID: 7628068843704627541, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
+      propertyPath: muerte
+      value: 
+      objectReference: {fileID: 4940440757287095436}
     - target: {fileID: 7821578013757784519, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

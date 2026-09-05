@@ -26,20 +26,16 @@ public class NoteSpawner : MonoBehaviour
         {
             case "Middle":
                 note.transform.position = laneMiddle.position;
-                note.destiny = laneMiddleDestiny;
                 note.perfectMark = laneMiddlePerfect;
                 break;
             case "Left":
                 note.transform.position = laneLeft.position;
-                note.destiny = laneLeftDestiny;
                 note.perfectMark = laneLeftPerfect;
                 break;
             case "Right":
                 note.transform.position = laneRight.position;
-                note.destiny = laneRightDestiny;
                 note.perfectMark = laneRightPerfect;
                 break;
         }
-        note.StartMovement();
     }
 }
