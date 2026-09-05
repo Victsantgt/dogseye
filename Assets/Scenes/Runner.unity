@@ -514,6 +514,7 @@ GameObject:
   - component: {fileID: 180828825}
   - component: {fileID: 180828826}
   - component: {fileID: 180828827}
+  - component: {fileID: 180828828}
   m_Layer: 0
   m_Name: LevelController
   m_TagString: Untagged
@@ -656,6 +657,30 @@ MonoBehaviour:
   - {fileID: 1313084904}
   - {fileID: 460534166}
   - {fileID: 367674929}
+--- !u!114 &180828828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 180828822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9eeb043efa6e8f8478618b8c2790230c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PrefabEnemigo: {fileID: 173214691464615192, guid: e1a723384d6277f498a137f4becb4b08, type: 3}
+  Jugador: {fileID: 6604563331624544903}
+  SistemaNotas: {fileID: 180828826}
+  Generador: {fileID: 180828823}
+  TagDelJugador: Player
+  AparicionAutomatica: 1
+  SegundosParaReaparecer: 5
+  RetrasoPrimeraAparicion: 0
+  UsarTeclasDePrueba: 1
+  TeclaAparecer: 36
+  TeclaVencer: 16
+  TeclaGanar: 28
 --- !u!1 &309498621
 GameObject:
   m_ObjectHideFlags: 0
@@ -2546,6 +2571,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 166097776}
   m_SourcePrefab: {fileID: 100100000, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+--- !u!4 &6604563331624544903 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1591134152834062666, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+  m_PrefabInstance: {fileID: 6604563331624544902}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
