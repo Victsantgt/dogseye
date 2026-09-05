@@ -26,6 +26,19 @@ public class DecisionManager : MonoBehaviour
     [Tooltip("Opcional: etiqueta donde se muestra la cuenta atras. Puede quedar vacia.")]
     public TextMeshProUGUI TextoCuentaAtras;
 
+    [Header("Texto de la respuesta (durante el puente)")]
+    [Tooltip("Texto que sale al elegir la opcion BUENA (flecha izquierda).")]
+    [TextArea] public string TextoOpcionBuena = "accion buena";
+
+    [Tooltip("Texto que sale al elegir la opcion MALA (flecha derecha).")]
+    [TextArea] public string TextoOpcionMala = "accion mala";
+
+    [Tooltip("Etiqueta donde se escribe el texto de la respuesta.")]
+    public TextMeshProUGUI TextoRespuestaUI;
+
+    [Tooltip("Objeto que se activa mientras se muestra la respuesta. Se apaga cuando el jugador frena en el RushStopTrigger.")]
+    public GameObject PanelRespuesta;
+
     [Header("Cuando aparece")]
     [Tooltip("Tecla que lanza la pregunta. Solo se escucha cuando no hay ninguna en pantalla.")]
     public Key TeclaPregunta = Key.P;
@@ -44,6 +57,19 @@ public class DecisionManager : MonoBehaviour
     [Tooltip("Apaga el sistema de notas mientras dura el puente. Opcional: si se deja vacio no se toca.")]
     public RhythmSystemToggle SistemaNotas;
 
+    [Tooltip("Lleva la cuenta de decisiones y remata la partida. Opcional: si se deja vacio el juego no termina nunca.")]
+    public GameEndManager Final;
+
+    [Tooltip("Efecto de camara. Se usa para el puente corto de cuando la respuesta NO cambia el terreno.")]
+    public DollyZoomEffect Camara;
+
+    [Header("Puente cuando la respuesta NO cambia el terreno")]
+    [Tooltip("Segundos que dura el efecto de camara antes de que vuelvan las notas. Es el equivalente al trayecto hasta el segmento de transicion, pero por tiempo.")]
+    public float SegundosPuenteSinTransicion = 2f;
+
+    [Tooltip("Si el texto de la respuesta sale tambien en este caso. Aqui si puede salir porque el puente tiene una duracion fija que lo termina.")]
+    public bool MostrarTextoSinTransicion = true;
+
     float tiempoRestante;
     bool preguntaActiva;
 
@@ -58,7 +84,19 @@ public class DecisionManager : MonoBehaviour
         if (Generador == null)
             Generador = GetComponent<SegmentGenerator>();
 
+        // El texto de la respuesta se quita justo cuando el aceleron empieza a frenar,
+        // o sea al cruzar el RushStopTrigger del segmento de transicion.
+        if (Aceleron != null)
+            Aceleron.AlDetenerse += OcultarRespuesta;
+
         Ocultar();
+        OcultarRespuesta();
+    }
+
+    void OnDestroy()
+    {
+        if (Aceleron != null)
+            Aceleron.AlDetenerse -= OcultarRespuesta;
     }
 
     /// <summary>
@@ -73,8 +111,17 @@ public class DecisionManager : MonoBehaviour
         if (preguntaActiva)
             return;
 
+        // La pregunta que vendria despues de la ultima decision no llega a salir:
+        // en su lugar arranca el final. Da igual quien la pida, la tecla o el
+        // Transitions.NextTransition() del final de seccion musical.
+        if (Final != null && Final.IntentarTerminar())
+            return;
+
         preguntaActiva = true;
         tiempoRestante = SegundosParaElegir;
+
+        // Por si quedara visible el texto del puente anterior
+        OcultarRespuesta();
 
         if (TextoUI != null)
             TextoUI.text = TextoPregunta;
@@ -149,6 +196,11 @@ public class DecisionManager : MonoBehaviour
         preguntaActiva = false;
         Ocultar();
 
+        // Solo se apunta. La partida no acaba aqui: acaba en la pregunta siguiente,
+        // o sea cuando termine la seccion musical que el jugador esta a punto de jugar.
+        if (Final != null)
+            Final.RegistrarDecision(elegida);
+
         // Buena tiende a Narrow, Mala tiende a Wide.
         // Si el generador ya esta en ese tipo no hace nada y sigue su ritmo normal;
         // si no, mete la transicion al instante y cambia el tipo a partir de ahi.
@@ -164,15 +216,18 @@ public class DecisionManager : MonoBehaviour
         {
             // Solo hay puente si el terreno cambia de verdad. Si se sigue fabricando
             // el mismo tipo no hay nada a lo que llegar, asi que ni aceleron ni pausa.
+            MostrarRespuesta(elegida);
+
             if (Aceleron != null)
                 Aceleron.Lanzar();
         }
         else
         {
-            // Sin segmento de transicion no habra ningun RhythmResumeTrigger que
-            // encienda las notas, asi que las devolvemos aqui mismo.
-            if (SistemaNotas != null)
-                SistemaNotas.Activar();
+            // Sin segmento de transicion no hay ningun RhythmResumeTrigger que encienda
+            // las notas, asi que el puente lo marca un temporizador: mismo efecto de
+            // camara, pero sin aceleron ni lineas (esas dos leen la velocidad, que aqui
+            // no cambia), y las notas esperan a que termine.
+            StartCoroutine(PuenteSinTransicion(elegida));
         }
 
         Debug.Log("Decision: " + elegida + (porTiempo ? " (al azar, se acabo el tiempo)" : "")
@@ -192,5 +247,47 @@ public class DecisionManager : MonoBehaviour
     {
         if (PanelPregunta != null)
             PanelPregunta.SetActive(false);
+    }
+
+    /// <summary>
+    /// Saca el texto del puente segun lo elegido. Se queda en pantalla hasta que el
+    /// aceleron empieza a frenar, que es cuando el jugador cruza el RushStopTrigger.
+    /// </summary>
+    void MostrarRespuesta(Opcion elegida)
+    {
+        if (TextoRespuestaUI != null)
+            TextoRespuestaUI.text = elegida == Opcion.Buena ? TextoOpcionBuena : TextoOpcionMala;
+
+        if (PanelRespuesta != null)
+            PanelRespuesta.SetActive(true);
+    }
+
+    void OcultarRespuesta()
+    {
+        if (PanelRespuesta != null)
+            PanelRespuesta.SetActive(false);
+    }
+
+    /// <summary>
+    /// Puente para la respuesta que no genera segmento de transicion. Hace el mismo
+    /// dolly zoom que el puente largo, pero durando SegundosPuenteSinTransicion en vez
+    /// de hasta cruzar un trigger, y sin tocar la velocidad del jugador: por eso no
+    /// salen ni el aceleron ni las lineas, que se alimentan de la velocidad.
+    /// Las notas no vuelven hasta que termina.
+    /// </summary>
+    System.Collections.IEnumerator PuenteSinTransicion(Opcion elegida)
+    {
+        if (MostrarTextoSinTransicion)
+            MostrarRespuesta(elegida);
+
+        if (Camara != null)
+            Camara.LanzarManual(SegundosPuenteSinTransicion);
+
+        yield return new WaitForSeconds(SegundosPuenteSinTransicion);
+
+        OcultarRespuesta();
+
+        if (SistemaNotas != null)
+            SistemaNotas.Activar();
     }
 }

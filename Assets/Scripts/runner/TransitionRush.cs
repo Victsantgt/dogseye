@@ -35,6 +35,13 @@ public class TransitionRush : MonoBehaviour
     [Tooltip("Si se deja vacio se busca el BasicMovement de este mismo GameObject.")]
     public BasicMovement Movimiento;
 
+    /// <summary>
+    /// Se dispara justo cuando empieza el frenado, sea porque el RushStopTrigger ha
+    /// llamado a Detener() o porque ha saltado la red de seguridad. Lo usa el
+    /// DecisionManager para quitar de pantalla el texto de la respuesta.
+    /// </summary>
+    public event System.Action AlDetenerse;
+
     Coroutine rutina;
     bool pararSolicitado;
     float multiplicadorActual = 1f;
@@ -118,6 +125,11 @@ public class TransitionRush : MonoBehaviour
             Aplicar(MultiplicadorMaximo);
             yield return null;
         }
+
+        // Salimos del sostenido: empieza el frenado, venga del trigger o de la
+        // red de seguridad. Avisamos aqui para que el aviso llegue siempre.
+        if (AlDetenerse != null)
+            AlDetenerse();
 
         // --- bajada ---
         float desde = multiplicadorActual;

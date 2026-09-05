@@ -7,13 +7,18 @@ using UnityEngine.UI;
 public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
 {
     //public Transitions transicion;
-    public NoteHitSubject subject; 
+
+    // Secuencia de muerte del jugador. La referencia esta viva y ya asignada en la
+    // escena; lo unico comentado es la llamada de abajo, en UpdateObserver().
+    public PlayerDeathManager muerte;
+
+    public NoteHitSubject subject;
     public float maxLife = 100f;
     public float currentLife = 100f;
 
     public AudioClip[] noteAudio;
 
-    // Cuánto suma o resta por nota
+    // Cuï¿½nto suma o resta por nota
     public float lifeGainPerfect = 5f;
     public float lifeGainGood = 2f;
     public float lifeLoseBad = 5f;
@@ -61,6 +66,12 @@ public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
         if (currentLife <= 0f)
         {
             //transicion.LoseTransition();
+
+            // DESCOMENTA ESTA LINEA cuando el sistema de notas este arreglado y la vida
+            // sea fiable. Dispara la misma secuencia de muerte que ahora se prueba a mano
+            // con la tecla M (frenado, notas fuera, fundido a negro y R para reiniciar).
+            // Al descomentarla conviene poner UsarTeclaDePrueba a false en el jugador.
+            //if (muerte != null) muerte.Morir();
         }
 
     }
