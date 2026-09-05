@@ -19,8 +19,8 @@ public class GameEndManager : MonoBehaviour
     [System.Serializable]
     public class FinalPorSecuencia
     {
-        [Tooltip("Secuencia exacta y en orden. B = buena, M = mala. Ejemplo: BBM")]
-        public string Secuencia = "BBB";
+        [Tooltip("Secuencia exacta y en orden. I = izquierda, D = derecha.")]
+        public string Secuencia = "III";
 
         [TextArea(2, 6)]
         public string Texto = "";
@@ -59,21 +59,21 @@ public class GameEndManager : MonoBehaviour
     [Header("Resumen de conteo")]
     public TextMeshProUGUI TextoResumenUI;
 
-    [Tooltip("Plantilla del resumen. Admite {buenas}, {malas} y {total}.")]
+    [Tooltip("Plantilla del resumen. Admite {irte}, {quedarte} y {total}.")]
     [TextArea(2, 4)]
-    public string PlantillaResumen = "Has elegido {buenas} y {malas}.";
+    public string PlantillaResumen = "Has elegido {irte} y {quedarte}.";
 
     [Tooltip("Como se escribe el recuento de buenas cuando es exactamente 1.")]
-    public string FraseBuenaSingular = "1 opcion buena";
+    public string FraseDerechaSingular = "irte 1 vez";
 
     [Tooltip("Como se escribe el recuento de buenas cuando es 0 o mas de 1. {n} es el numero.")]
-    public string FraseBuenaPlural = "{n} opciones buenas";
+    public string FraseDerechaPlural = "irte {n} veces";
 
     [Tooltip("Como se escribe el recuento de malas cuando es exactamente 1.")]
-    public string FraseMalaSingular = "1 opcion mala";
+    public string FraseIzquierdaSingular = "quedarte 1 vez";
 
     [Tooltip("Como se escribe el recuento de malas cuando es 0 o mas de 1. {n} es el numero.")]
-    public string FraseMalaPlural = "{n} opciones malas";
+    public string FraseIzquierdaPlural = "quedarte {n} veces";
 
     [Header("Reinicio")]
     public TextMeshProUGUI TextoReinicioUI;
@@ -132,13 +132,28 @@ public class GameEndManager : MonoBehaviour
     ///     ya terminada.
     /// </summary>
     /// <returns>true si el final ya esta en marcha y por tanto hay que cortar lo que se estuviera haciendo.</returns>
+
+    private float EsperaAntesDeTerminar = 5f;
+
+    private bool terminando = false;
     public bool IntentarTerminar()
     {
         if (terminado) return true;
         if (decisiones.Count < DecisionesParaFinal) return false;
 
-        Terminar();
+        if (!terminando)
+        {
+            terminando = true;
+            StartCoroutine(TerminarConEspera(EsperaAntesDeTerminar));
+        }
+
         return true;
+    }
+
+    private IEnumerator TerminarConEspera(float segundos)
+    {
+        yield return new WaitForSeconds(segundos);
+        Terminar();
     }
 
     [ContextMenu("Terminar partida (prueba)")]
@@ -189,7 +204,7 @@ public class GameEndManager : MonoBehaviour
     {
         System.Text.StringBuilder sb = new System.Text.StringBuilder(decisiones.Count);
         for (int i = 0; i < decisiones.Count; i++)
-            sb.Append(decisiones[i] == DecisionManager.Opcion.Buena ? 'B' : 'M');
+            sb.Append(decisiones[i] == DecisionManager.Opcion.Derecha ? 'D' : 'I');
         return sb.ToString();
     }
 
@@ -213,13 +228,13 @@ public class GameEndManager : MonoBehaviour
     {
         int buenas = 0;
         for (int i = 0; i < decisiones.Count; i++)
-            if (decisiones[i] == DecisionManager.Opcion.Buena) buenas++;
+            if (decisiones[i] == DecisionManager.Opcion.Derecha) buenas++;
 
         int malas = decisiones.Count - buenas;
 
         return PlantillaResumen
-            .Replace("{buenas}", Frase(buenas, FraseBuenaSingular, FraseBuenaPlural))
-            .Replace("{malas}", Frase(malas, FraseMalaSingular, FraseMalaPlural))
+            .Replace("{irte}", Frase(buenas, FraseDerechaSingular, FraseDerechaPlural))
+            .Replace("{quedarte}", Frase(malas, FraseIzquierdaSingular, FraseIzquierdaPlural))
             .Replace("{total}", decisiones.Count.ToString());
     }
 
@@ -319,7 +334,7 @@ public class GameEndManager : MonoBehaviour
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder(DecisionesParaFinal);
             for (int bit = DecisionesParaFinal - 1; bit >= 0; bit--)
-                sb.Append(((i >> bit) & 1) == 0 ? 'B' : 'M');
+                sb.Append(((i >> bit) & 1) == 0 ? 'I' : 'D');
 
             string sec = sb.ToString();
             FinalPorSecuencia f = new FinalPorSecuencia();
