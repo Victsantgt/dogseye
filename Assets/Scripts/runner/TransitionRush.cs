@@ -49,6 +49,15 @@ public class TransitionRush : MonoBehaviour
     /// <summary>True mientras el aceleron esta en marcha (subiendo, sostenido o bajando).</summary>
     public bool Activo { get { return rutina != null; } }
 
+    // [ANADIDO: animaciones del carrito] Copia publica de pararSolicitado, que hasta
+    // ahora era privada. Sirve para distinguir las dos mitades del aceleron desde fuera:
+    // Activo esta en true durante la subida, el sostenido Y la bajada, asi que por si
+    // solo no dice si el jugador todavia esta ganando velocidad o ya esta frenando.
+    // AnimacionesDelCarrito no la usa (se guia por la velocidad, como el resto de
+    // efectos del puente), pero queda expuesta para quien la necesite.
+    /// <summary>True desde que alguien pide el frenado hasta que arranca el siguiente aceleron.</summary>
+    public bool FrenadoSolicitado { get { return pararSolicitado; } }
+
     void Awake()
     {
         if (Movimiento == null)
