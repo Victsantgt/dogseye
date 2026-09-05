@@ -7,18 +7,18 @@
             "id": "df70fa95-8a34-4494-b137-73ab6b9c7d37",
             "actions": [
                 {
-                    "name": "Left",
+                    "name": "Right",
                     "type": "Button",
-                    "id": "e717c593-1283-427d-91d6-c46bcd235377",
+                    "id": "d82cc34c-a9a4-40cf-98c0-7aee12407d74",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Right",
+                    "name": "Left",
                     "type": "Button",
-                    "id": "d82cc34c-a9a4-40cf-98c0-7aee12407d74",
+                    "id": "e717c593-1283-427d-91d6-c46bcd235377",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -37,6 +37,24 @@
                     "name": "Skip",
                     "type": "Button",
                     "id": "2c3c3b56-779e-4cbe-97e8-a9ae0dbdddc2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Choose_Right",
+                    "type": "Button",
+                    "id": "07ff95bf-3d6b-4a3e-95ce-4efc5f22bbde",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Choose_Left",
+                    "type": "Button",
+                    "id": "3e19e3be-0065-40dd-8f45-653b1cb68b40",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -162,6 +180,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Skip",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c6052036-f7f6-430c-9643-aa6fb9ab7b61",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Choose_Right",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8f58e651-7b7b-43f1-89dc-de7ac56fed58",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Choose_Left",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
