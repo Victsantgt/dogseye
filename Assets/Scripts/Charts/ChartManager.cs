@@ -56,4 +56,19 @@ public class ChartManager : MonoBehaviour
         MusicManager.Instance.ReturnToDefault();
         chartActive = true;
     }
+
+    /// <summary>
+    /// Adelanta el puntero del chart hasta la primera nota que aun no ha pasado.
+    /// Lo llama RhythmSystemToggle al reactivar el sistema despues del puente entre
+    /// secciones: sin esto, todas las notas que tocaban durante la pausa saldrian
+    /// seguidas de golpe, una por frame.
+    /// </summary>
+    public void SaltarNotasPasadas()
+    {
+        if (chart == null || chart.notes == null) return;
+
+        float ahora = Time.timeSinceLevelLoad;
+        while (nextNote < chart.notes.Length && chart.notes[nextNote].time < ahora)
+            nextNote++;
+    }
 }

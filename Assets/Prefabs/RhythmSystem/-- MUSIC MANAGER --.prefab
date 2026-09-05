@@ -350,7 +350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3513ca87d3dbad040bc3671fb586d730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultClip: {fileID: 0}
+  defaultClip: {fileID: 8300000, guid: 68cdabd0c83cfbf42b33b5fdf93abbd1, type: 3}
   track01: {fileID: 7315319616038452553}
   track02: {fileID: 4332488226864642155}
   SFX_Object: {fileID: 3359788265287910379, guid: ac1f490d94364d340b6f3b2e0684bfb5, type: 3}

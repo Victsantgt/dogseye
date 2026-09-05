@@ -627,10 +627,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1117176948030042031, guid: 6d73ab99eccfd3a4ea93ac26ac5849d9, type: 3}
-      propertyPath: defaultClip
-      value: 
-      objectReference: {fileID: 8300000, guid: 68cdabd0c83cfbf42b33b5fdf93abbd1, type: 3}
     - target: {fileID: 8240215118148071182, guid: 6d73ab99eccfd3a4ea93ac26ac5849d9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

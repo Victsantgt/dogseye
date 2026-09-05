@@ -24,8 +24,13 @@ public class SegmentGenerator : MonoBehaviour
     [SerializeField] int Zpos = 168;
     [Tooltip("Cambiar segun el largo del suelo de los prefabs.")]
     [SerializeField] int LargoSegmento = 168;
-    [Tooltip("Segmentos que se crean de golpe al arrancar la partida, para que no se vea el vacio delante del jugador.")]
-    [SerializeField] int SegmentosIniciales = 3;
+    // Este numero es tambien el colchon en regimen: siempre hay exactamente
+    // SegmentosIniciales segmentos por delante del jugador. Cuanto mas alto, mas
+    // tarda en llegar el segmento de transicion tras responder la pregunta
+    // (a 24 u/s cada segmento son 7 s). Bajarlo solo es seguro si la niebla tapa
+    // la distancia a la que aparece el segmento nuevo: SegmentosIniciales * 168.
+    [Tooltip("Segmentos que hay siempre por delante del jugador. 2 x 168 = 336 u, tapado por una niebla que acabe antes de esa distancia.")]
+    [SerializeField] int SegmentosIniciales = 2;
 
     [Header("Estado")]
     [Tooltip("Tipo con el que arranca el nivel. Debe coincidir con el StartSegment de la escena.")]
@@ -81,19 +86,25 @@ public class SegmentGenerator : MonoBehaviour
     /// delante de los que ya existen) y a partir de ahi todos los segmentos que pida
     /// el trigger son del tipo objetivo.
     /// </summary>
-    public void CambiarTipoDeSegmento(TipoSegmento objetivo)
+    /// <returns>
+    /// true si se ha colocado un segmento de transicion, false si el terreno se queda
+    /// como estaba. Lo usa el DecisionManager para saber si hay que lanzar el aceleron
+    /// y si hay que esperar a un trigger de transicion.
+    /// </returns>
+    public bool CambiarTipoDeSegmento(TipoSegmento objetivo)
     {
         if (objetivo == tipoActual)
-            return;
+            return false;
 
         GameObject transicion = objetivo == TipoSegmento.Narrow ? SegmentWideToNarrow : SegmentNarrowToWide;
         if (transicion == null)
         {
             Debug.LogError("SegmentGenerator: falta el prefab de transicion hacia " + objetivo, this);
-            return;
+            return false;
         }
 
         tipoActual = objetivo;
         ColocarSegmento(transicion);
+        return true;
     }
 }

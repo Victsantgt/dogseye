@@ -1,4 +1,3 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -28,17 +27,8 @@ public class DecisionManager : MonoBehaviour
     public TextMeshProUGUI TextoCuentaAtras;
 
     [Header("Cuando aparece")]
-    [Tooltip("Segundos de gameplay antes de lanzar la primera pregunta.")]
-    public float SegundosHastaPrimeraPregunta = 20f;
-
-    [Tooltip("Desactivalo si prefieres lanzar la pregunta solo a mano con LanzarPregunta().")]
-    public bool LanzarPrimeraAutomaticamente = true;
-
-    [Tooltip("Si esta activo la pregunta vuelve a salir sola cada SegundosEntrePreguntas.")]
-    public bool RepetirAutomaticamente = false;
-
-    [Tooltip("Segundos entre una pregunta y la siguiente cuando RepetirAutomaticamente esta activo.")]
-    public float SegundosEntrePreguntas = 30f;
+    [Tooltip("Tecla que lanza la pregunta. Solo se escucha cuando no hay ninguna en pantalla.")]
+    public Key TeclaPregunta = Key.P;
 
     [Header("Tiempo para responder")]
     [Tooltip("Segundos que tiene el jugador para elegir. Al llegar a 0 se escoge una opcion al azar.")]
@@ -47,6 +37,12 @@ public class DecisionManager : MonoBehaviour
     [Header("Referencias")]
     [Tooltip("Si se deja vacio se busca el SegmentGenerator de este mismo GameObject.")]
     public SegmentGenerator Generador;
+
+    [Tooltip("Aceleron del jugador durante el puente musical. Opcional: si se deja vacio no hay aceleron.")]
+    public TransitionRush Aceleron;
+
+    [Tooltip("Apaga el sistema de notas mientras dura el puente. Opcional: si se deja vacio no se toca.")]
+    public RhythmSystemToggle SistemaNotas;
 
     float tiempoRestante;
     bool preguntaActiva;
@@ -65,32 +61,11 @@ public class DecisionManager : MonoBehaviour
         Ocultar();
     }
 
-    void Start()
-    {
-        if (LanzarPrimeraAutomaticamente)
-            StartCoroutine(CicloAutomatico());
-    }
-
-    IEnumerator CicloAutomatico()
-    {
-        yield return new WaitForSeconds(SegundosHastaPrimeraPregunta);
-        LanzarPregunta();
-
-        while (RepetirAutomaticamente)
-        {
-            // esperamos a que se resuelva la pregunta actual antes de contar el intervalo
-            while (preguntaActiva)
-                yield return null;
-
-            yield return new WaitForSeconds(SegundosEntrePreguntas);
-            LanzarPregunta();
-        }
-    }
-
     /// <summary>
     /// Muestra la pregunta en pantalla y arranca la cuenta atras.
-    /// Llamalo desde donde quieras (otro script, un UnityEvent, un boton de UI...)
-    /// para decidir tu el momento exacto. Si ya hay una pregunta en pantalla se ignora.
+    /// La lanza TeclaPregunta (P por defecto), pero sigue siendo publica para poder
+    /// llamarla desde otro script, un UnityEvent o un boton de UI.
+    /// Si ya hay una pregunta en pantalla se ignora.
     /// </summary>
     [ContextMenu("Lanzar pregunta")]
     public void LanzarPregunta()
@@ -107,13 +82,26 @@ public class DecisionManager : MonoBehaviour
         if (PanelPregunta != null)
             PanelPregunta.SetActive(true);
 
+        // El ritmo se para mientras se decide. Lo vuelve a encender el
+        // RhythmResumeTrigger del segmento de transicion, o el propio Resolver()
+        // si la respuesta no cambia el terreno y no va a haber transicion.
+        if (SistemaNotas != null)
+            SistemaNotas.Desactivar();
+
         RefrescarCuentaAtras();
     }
 
     void Update()
     {
         if (!preguntaActiva)
+        {
+            // Fuera de pregunta lo unico que escuchamos es la tecla que la lanza.
+            Keyboard tecladoLibre = Keyboard.current;
+            if (tecladoLibre != null && tecladoLibre[TeclaPregunta].wasPressedThisFrame)
+                LanzarPregunta();
+
             return;
+        }
 
         Opcion elegida;
         if (LeerTecla(out elegida))
@@ -166,12 +154,29 @@ public class DecisionManager : MonoBehaviour
         // si no, mete la transicion al instante y cambia el tipo a partir de ahi.
         TipoSegmento objetivo = elegida == Opcion.Buena ? TipoSegmento.Narrow : TipoSegmento.Wide;
 
+        bool hayTransicion = false;
         if (Generador != null)
-            Generador.CambiarTipoDeSegmento(objetivo);
+            hayTransicion = Generador.CambiarTipoDeSegmento(objetivo);
         else
             Debug.LogError("DecisionManager: no hay SegmentGenerator asignado.", this);
 
-        Debug.Log("Decision: " + elegida + (porTiempo ? " (al azar, se acabo el tiempo)" : "") + " -> terreno " + objetivo);
+        if (hayTransicion)
+        {
+            // Solo hay puente si el terreno cambia de verdad. Si se sigue fabricando
+            // el mismo tipo no hay nada a lo que llegar, asi que ni aceleron ni pausa.
+            if (Aceleron != null)
+                Aceleron.Lanzar();
+        }
+        else
+        {
+            // Sin segmento de transicion no habra ningun RhythmResumeTrigger que
+            // encienda las notas, asi que las devolvemos aqui mismo.
+            if (SistemaNotas != null)
+                SistemaNotas.Activar();
+        }
+
+        Debug.Log("Decision: " + elegida + (porTiempo ? " (al azar, se acabo el tiempo)" : "")
+            + " -> terreno " + objetivo + (hayTransicion ? " (con transicion)" : " (sin cambio)"));
     }
 
     void RefrescarCuentaAtras()
