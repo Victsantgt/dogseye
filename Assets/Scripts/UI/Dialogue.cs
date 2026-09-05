@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System.Collections;
-using UnityEngine.UI;
+using System;
 
 public class Dialogue : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class Dialogue : MonoBehaviour
 
     private int index = 0;
 
-    [SerializeField] private TMP_Text dialogueText;
+    [SerializeField] public TMP_Text dialogueText;
 
     [SerializeField] private float typingSpeed = 0.03f;
 
@@ -18,9 +18,13 @@ public class Dialogue : MonoBehaviour
 
     [SerializeField] private DialogueOptionsPopup optionsPopup;
 
+    [SerializeField] private float delayBeforeFinished = 0.3f;
+
     private bool isTyping = false;
     private string fullText = "";
     private Coroutine typingCoroutine;
+
+    public event Action OnDialogueFinished;
 
     private void OnEnable()
     {
@@ -59,7 +63,7 @@ public class Dialogue : MonoBehaviour
     private IEnumerator TypeText(string text)
     {
         isTyping = true;
-        dialogueText.text = "";
+        
 
         foreach (char c in text)
         {
@@ -69,6 +73,8 @@ public class Dialogue : MonoBehaviour
 
         isTyping = false;
         typingCoroutine = null;
+
+        FinishTyping();
     }
 
     private void FinishTyping()
@@ -93,5 +99,14 @@ public class Dialogue : MonoBehaviour
 
         if (optionsPopup != null)
             optionsPopup.ShowOptions(finishedIndex);
+
+        StartCoroutine(DialogueFinishedDelay());
+    }
+
+    private IEnumerator DialogueFinishedDelay()
+    {
+        yield return new WaitForSecondsRealtime(delayBeforeFinished);
+
+        OnDialogueFinished?.Invoke();
     }
 }

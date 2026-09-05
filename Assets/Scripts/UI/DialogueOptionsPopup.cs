@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class DialogueOptionsPopup : MonoBehaviour
@@ -10,6 +11,7 @@ public class DialogueOptionsPopup : MonoBehaviour
 
         foreach (ImageOption option in options)
         {
+            Debug.Log("Opcción creada!");
             if (option == null || option.rectTransform == null)
                 continue;
 
@@ -23,6 +25,22 @@ public class DialogueOptionsPopup : MonoBehaviour
                 option.rectTransform.gameObject.SetActive(true);
 
             PopOut.pop(option.rectTransform);
+        }
+    }
+
+    public void HideOptions()
+    {
+        if (options == null) return;
+
+        foreach (ImageOption option in options)
+        {
+            if (option == null || option.rectTransform == null)
+                continue;
+
+            option.rectTransform.DOKill();
+
+            if (option.rectTransform.gameObject.activeSelf)
+                option.rectTransform.gameObject.SetActive(false);
         }
     }
 }

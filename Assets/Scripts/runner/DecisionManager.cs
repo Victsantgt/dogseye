@@ -13,18 +13,26 @@ public class DecisionManager : MonoBehaviour
 {
     public enum Opcion { Buena, Mala }
 
-    [Header("Texto")]
-    [Tooltip("Texto que aparece en pantalla al lanzar la pregunta.")]
-    [TextArea] public string TextoPregunta = "accion buena, o mala?";
+    [SerializeField] private InputActionReference leftDecision;
+    [SerializeField] private InputActionReference rightDecision;
 
-    [Tooltip("Etiqueta donde se escribe TextoPregunta.")]
-    public TextMeshProUGUI TextoUI;
+    public Dialogue dialogo;
 
     [Tooltip("Objeto que se activa y desactiva al mostrar u ocultar la pregunta.")]
     public GameObject PanelPregunta;
 
-    [Tooltip("Opcional: etiqueta donde se muestra la cuenta atras. Puede quedar vacia.")]
+    public PhoneVibration phone;
+    public BubbleText bubbleText;
+    public DialogueOptionsPopup options;
+
+    [Header("Tiempo para responder")]
+    [Tooltip("Segundos que tiene el jugador para elegir. Al llegar a 0 se escoge una opcion al azar.")]
+    public float SegundosParaElegir = 5f;
+
+    [Tooltip("Opcional: etiqueta donde se muestra la cuenta atrás. Puede quedar vacía.")]
     public TextMeshProUGUI TextoCuentaAtras;
+
+    bool puedeElegir;
 
     [Header("Texto de la respuesta (durante el puente)")]
     [Tooltip("Texto que sale al elegir la opcion BUENA (flecha izquierda).")]
@@ -38,14 +46,6 @@ public class DecisionManager : MonoBehaviour
 
     [Tooltip("Objeto que se activa mientras se muestra la respuesta. Se apaga cuando el jugador frena en el RushStopTrigger.")]
     public GameObject PanelRespuesta;
-
-    [Header("Cuando aparece")]
-    [Tooltip("Tecla que lanza la pregunta. Solo se escucha cuando no hay ninguna en pantalla.")]
-    public Key TeclaPregunta = Key.P;
-
-    [Header("Tiempo para responder")]
-    [Tooltip("Segundos que tiene el jugador para elegir. Al llegar a 0 se escoge una opcion al azar.")]
-    public float SegundosParaElegir = 5f;
 
     [Header("Referencias")]
     [Tooltip("Si se deja vacio se busca el SegmentGenerator de este mismo GameObject.")]
@@ -89,8 +89,28 @@ public class DecisionManager : MonoBehaviour
         if (Aceleron != null)
             Aceleron.AlDetenerse += OcultarRespuesta;
 
-        Ocultar();
+        OcultarSecuenciaTelefono();
         OcultarRespuesta();
+    }
+
+    void OnEnable()
+    {
+        if (dialogo != null)
+            dialogo.OnDialogueFinished += HabilitarEleccion;
+    }
+
+    void OnDisable()
+    {
+        if (dialogo != null)
+            dialogo.OnDialogueFinished -= HabilitarEleccion;
+    }
+
+    void HabilitarEleccion()
+    {
+        TextoCuentaAtras.gameObject.SetActive(true);
+        puedeElegir = true;
+        tiempoRestante = SegundosParaElegir;
+        RefrescarCuentaAtras();
     }
 
     void OnDestroy()
@@ -118,16 +138,15 @@ public class DecisionManager : MonoBehaviour
             return;
 
         preguntaActiva = true;
+
+        puedeElegir = false;
+
         tiempoRestante = SegundosParaElegir;
+        if (TextoCuentaAtras != null)
+            TextoCuentaAtras.text = "";
 
         // Por si quedara visible el texto del puente anterior
         OcultarRespuesta();
-
-        if (TextoUI != null)
-            TextoUI.text = TextoPregunta;
-
-        if (PanelPregunta != null)
-            PanelPregunta.SetActive(true);
 
         // El ritmo se para mientras se decide. Lo vuelve a encender el
         // RhythmResumeTrigger del segmento de transicion, o el propio Resolver()
@@ -136,19 +155,18 @@ public class DecisionManager : MonoBehaviour
             SistemaNotas.Desactivar();
 
         RefrescarCuentaAtras();
+
+        if (PanelPregunta != null)
+            PanelPregunta.SetActive(true);
+
+        if (phone != null) phone.PlayShake();
     }
 
     void Update()
     {
-        if (!preguntaActiva)
-        {
-            // Fuera de pregunta lo unico que escuchamos es la tecla que la lanza.
-            Keyboard tecladoLibre = Keyboard.current;
-            if (tecladoLibre != null && tecladoLibre[TeclaPregunta].wasPressedThisFrame)
-                LanzarPregunta();
+        if (!preguntaActiva) return;
 
-            return;
-        }
+        if (!puedeElegir) return;
 
         Opcion elegida;
         if (LeerTecla(out elegida))
@@ -176,13 +194,13 @@ public class DecisionManager : MonoBehaviour
         if (teclado == null)
             return false;
 
-        if (teclado.leftArrowKey.wasPressedThisFrame)
+        if (leftDecision.action.WasPressedThisFrame())
         {
             elegida = Opcion.Buena;
             return true;
         }
 
-        if (teclado.rightArrowKey.wasPressedThisFrame)
+        if (rightDecision.action.WasPressedThisFrame())
         {
             elegida = Opcion.Mala;
             return true;
@@ -194,7 +212,7 @@ public class DecisionManager : MonoBehaviour
     void Resolver(Opcion elegida, bool porTiempo)
     {
         preguntaActiva = false;
-        Ocultar();
+        OcultarSecuenciaTelefono();
 
         // Solo se apunta. La partida no acaba aqui: acaba en la pregunta siguiente,
         // o sea cuando termine la seccion musical que el jugador esta a punto de jugar.
@@ -243,11 +261,6 @@ public class DecisionManager : MonoBehaviour
         TextoCuentaAtras.text = t.ToString("0.0");
     }
 
-    void Ocultar()
-    {
-        if (PanelPregunta != null)
-            PanelPregunta.SetActive(false);
-    }
 
     /// <summary>
     /// Saca el texto del puente segun lo elegido. Se queda en pantalla hasta que el
@@ -260,6 +273,16 @@ public class DecisionManager : MonoBehaviour
 
         if (PanelRespuesta != null)
             PanelRespuesta.SetActive(true);
+    }
+    void OcultarSecuenciaTelefono()
+    {
+        if (PanelPregunta != null) PanelPregunta.SetActive(false);
+        if (phone != null) phone.Hide();
+        if (bubbleText != null) bubbleText.Hide();
+        if (options != null) options.HideOptions();
+        TextoCuentaAtras.gameObject.SetActive(false);
+
+
     }
 
     void OcultarRespuesta()

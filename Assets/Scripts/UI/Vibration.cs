@@ -11,13 +11,9 @@ public class PhoneVibration : MonoBehaviour
 
     private Coroutine routine;
 
-    private void Start()
-    {
-        PlayShake();
-    }
-
     public void PlayShake()
     {
+        if (!gameObject.activeSelf) gameObject.SetActive(true);
         if (routine != null) StopCoroutine(routine);
         routine = StartCoroutine(ShakeSequence());
     }
@@ -57,5 +53,16 @@ public class PhoneVibration : MonoBehaviour
             yield return null;
         }
         transform.localEulerAngles = new Vector3(0, 0, targetZ);
+    }
+
+    public void Hide()
+    {
+        if (routine != null)
+        {
+            StopCoroutine(routine);
+            routine = null;
+
+            gameObject.SetActive(false);
+        }
     }
 }
