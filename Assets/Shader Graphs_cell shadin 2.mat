@@ -46,12 +46,12 @@ Material:
     - _Power: 3
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Shadow_Brightness: 0.43
+    - _Shadow_Brightness: 0.39
     m_Colors:
     - _Borde: {r: 1, g: 0, b: 0, a: 0}
-    - _Color: {r: 0.66264856, g: 0.8689488, b: 0.9169811, a: 0}
-    - _Offset: {r: 0.062, g: 0, b: 0, a: 0}
-    - _Tiling: {r: 1.14, g: 8, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 0}
+    - _Offset: {r: 0.402, g: 0, b: 0, a: 0}
+    - _Tiling: {r: 0.8, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &7176838925821294066
