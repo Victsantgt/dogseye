@@ -2,21 +2,26 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using DG.Tweening;
 
 public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Image fadeImage;
 
+    private AudioSource audio;
+
     private float fadeDuration = 0.5f;
 
     private void Start()
     {
+        audio = GetComponent<AudioSource>();
         if (fadeImage.gameObject.activeSelf) fadeImage.gameObject.SetActive(false);
     }
 
     public void StartGame()
     {
         fadeImage.gameObject.SetActive(true);
+        audio.DOFade(0, fadeDuration);
         StartCoroutine(TransitionStart());
     }
 
