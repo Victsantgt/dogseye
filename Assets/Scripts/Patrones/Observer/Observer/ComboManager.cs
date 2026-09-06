@@ -51,16 +51,47 @@ public class ComboManager : MonoBehaviour, IObserver<NoteHitInfo>
         //UpdateComboText();
         int oldCombo = combo;
 
-        // Actualizar combo
-        if (data.result == HitResult.Miss)
-            combo = 0;
-        else
+        // [CAMBIO: el combo se rompe al fallar] Antes esto solo se reiniciaba con Miss y
+        // TODO lo demas caia en el else y sumaba combo. Eso dejaba dos agujeros:
+        //
+        //   - Un Bad contaba como acierto de combo. Bad es "has llegado, pero raspado":
+        //     ya no quita vida (ver LifeManager.lifeLoseBad), pero tampoco puede valer
+        //     para sostener una racha, o el combo deja de medir precision.
+        //
+        //   - HitResult.Vacio, que es pulsar la tecla de un carril SIN nota, tambien
+        //     entraba por el else y hacia combo++. O sea que machacar las teclas subia el
+        //     combo hasta el infinito sin tocar una sola nota, que es justo el exploit
+        //     que el antispam vino a tapar en ColliderNoteScript.
+        //
+        // Ahora se escribe con un switch para que cada resultado tenga su caso a la
+        // vista: si manana se anade otro a HitResult, no se cuela solo en el "todo lo
+        // demas suma".
+        switch (data.result)
         {
-            if (data.result == HitResult.Bad) { score += 1000; }
-            if(data.result == HitResult.Good) { score += 2500; }
-            if (data.result == HitResult.Perfect) { score += 4750; }
-            
-            combo++;
+            case HitResult.Perfect:
+                score += 4750;
+                combo++;
+                break;
+
+            case HitResult.Good:
+                score += 2500;
+                combo++;
+                break;
+
+            // El Bad sigue puntuando: le has dado. Lo que ya no hace es mantener la
+            // racha. Si algun dia se quiere que tampoco de puntos, quita esta linea.
+            case HitResult.Bad:
+                score += 1000;
+                combo = 0;
+                break;
+
+            case HitResult.Miss:
+                combo = 0;
+                break;
+
+            case HitResult.Vacio:
+                combo = 0;
+                break;
         }
         // Solo animar si sube
         bool shouldAnimate = combo > oldCombo;
