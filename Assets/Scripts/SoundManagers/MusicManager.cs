@@ -87,10 +87,34 @@ namespace Patterns.Singleton
             StartCoroutine(ReturnDefaultCoroutine());
         }
 
+        // [ANADIDO: fundido de la intermision] Segundos que baja la musica antes de que
+        // entre el tema nuevo. Es tambien lo que se le suma al cero del chart para que
+        // las notas no se adelanten a la cancion; ver RetardoAlVolverAlDefault.
+        [Header("Fundido al volver al tema por defecto")]
+        [SerializeField] private float segundosDeFundidoDeSalida = 1.5f;
+
+        /// <summary>
+        /// Cuanto tardara en sonar la musica si AHORA MISMO se llama a ReturnToDefault().
+        /// Con musica sonando hay que esperar al fundido de salida; sin nada sonando el
+        /// tema entra al momento. Lo lee el ChartManager para colocar el cero del chart.
+        /// </summary>
+        public float RetardoAlVolverAlDefault
+        {
+            get { return isMusicPlaying ? segundosDeFundidoDeSalida : 0f; }
+        }
+
         public IEnumerator ReturnDefaultCoroutine()
         {
-            FadeOut();
-            yield return new WaitForSeconds(1.5f);
+            // [CAMBIO] Antes esto era "FadeOut();" a secas. FadeOut es un IEnumerator, y
+            // llamarlo sin StartCoroutine NO ejecuta nada: solo crea el iterador y lo
+            // tira. De ahi los dos sintomas: la intermision no bajaba de volumen, y
+            // ademas se quedaba sonando POR DEBAJO del tema nuevo para siempre, porque
+            // el Stop() del final de FadeOut tampoco llegaba a correr nunca.
+            //
+            // Con el yield return esperamos a que el fundido termine de verdad y solo
+            // entonces entra el tema siguiente, que es el orden que se buscaba.
+            yield return StartCoroutine(FadeOut(segundosDeFundidoDeSalida));
+
             musicStart();
         }
 
@@ -159,11 +183,15 @@ namespace Patterns.Singleton
             }
         }
 
-        public IEnumerator FadeOut()
+        // [CAMBIO] Se le ha anadido una duracion opcional para poder reutilizarla desde
+        // ReturnDefaultCoroutine con el valor del Inspector. Sin argumento se comporta
+        // igual que antes, asi que las llamadas de PlayerDeathManager y MusicaPorSeccion
+        // siguen valiendo tal cual.
+        public IEnumerator FadeOut(float duracion = -1f)
         {
             if (isMusicPlaying)
             {
-                float timeToFade = 1.5f;
+                float timeToFade = duracion > 0f ? duracion : segundosDeFundidoDeSalida;
                 float timeElapsed = 0;
 
                 if (isPlayingTrack01)
@@ -294,7 +322,7 @@ namespace Patterns.Singleton
             previewTween?.Kill();
             previewTween = previewSource.DOFade(1f, 0.3f).SetEase(Ease.InOutSine);
 
-            // Esperar duración del preview
+            // Esperar duraciï¿½n del preview
             float previewLength = Mathf.Min(maxDuration, clip.length - previewSource.time);
             yield return new WaitForSeconds(previewLength);
 

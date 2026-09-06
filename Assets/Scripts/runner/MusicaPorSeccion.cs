@@ -61,11 +61,11 @@ public class MusicaPorSeccion : MonoBehaviour
         [Tooltip("Solo informativo, para leerlo en el Inspector.")]
         public string Nombre = "";
 
-        [Tooltip("Suena si la decision anterior fue la opcion BUENA.")]
-        public Tema Buena = new Tema();
+        [Tooltip("Suena si la decision anterior fue Opcion.Derecha, que es la que el GameEndManager cuenta como buena.")]
+        public Tema Derecha = new Tema();
 
-        [Tooltip("Suena si la decision anterior fue la opcion MALA.")]
-        public Tema Mala = new Tema();
+        [Tooltip("Suena si la decision anterior fue Opcion.Izquierda, la que cuenta como mala.")]
+        public Tema Izquierda = new Tema();
     }
 
     [Header("Temas")]
@@ -224,9 +224,14 @@ public class MusicaPorSeccion : MonoBehaviour
 
         // La decision numero N elige el tema de la seccion N+1, que es la entrada N-1
         // de la lista (la primera entrada es la seccion 2).
+        // [CAMBIO] Antes esto miraba la ultima letra de SecuenciaActual(). Se rompio en
+        // silencio al renombrar el enum Opcion de Buena/Mala a Derecha/Izquierda: la
+        // letra paso de 'B' a 'D' y la comparacion daba siempre false, o sea que todas
+        // las secciones sonaban con la variante Malo. Ahora se compara el enum, que si
+        // alguien lo renombra da error de compilacion en vez de fallar mudo.
         int indice = ahora - 1;
-        bool buena = FueBuena(Final.SecuenciaActual());
-        Tema tema = TemaDeLaSeccion(indice, buena);
+        bool derecha = Final.UltimaDecision == DecisionManager.Opcion.Derecha;
+        Tema tema = TemaDeLaSeccion(indice, derecha);
 
         if (tema == null) return;   // los avisos los da TemaDeLaSeccion
 
@@ -237,7 +242,7 @@ public class MusicaPorSeccion : MonoBehaviour
         PonerChart(tema);
 
         if (LogAlCambiar)
-            Debug.Log("MusicaPorSeccion: decision " + ahora + " (" + (buena ? "buena" : "mala")
+            Debug.Log("MusicaPorSeccion: decision " + ahora + " (" + (derecha ? "derecha" : "izquierda")
                 + ") -> seccion " + (ahora + 1) + " preparada con '"
                 + (tema.Musica != null ? tema.Musica.name : "sin musica") + "' y chart '" + tema.Chart + "'"
                 + (ModoDePruebas ? " [pruebas]" : ""), this);
@@ -259,7 +264,7 @@ public class MusicaPorSeccion : MonoBehaviour
     /// corta y se ignora si la decision fue buena o mala, que ahi da igual.
     /// Devuelve null si no hay nada que poner, y en ese caso todo se queda como este.
     /// </summary>
-    Tema TemaDeLaSeccion(int indice, bool buena)
+    Tema TemaDeLaSeccion(int indice, bool derecha)
     {
         if (ModoDePruebas)
         {
@@ -282,20 +287,12 @@ public class MusicaPorSeccion : MonoBehaviour
         }
 
         TemasDeSeccion seccion = SeccionesSiguientes[indice];
-        Tema tema = buena ? seccion.Buena : seccion.Mala;
+        Tema tema = derecha ? seccion.Derecha : seccion.Izquierda;
 
         if (tema == null || tema.Musica == null)
-            Debug.LogError("MusicaPorSeccion: falta la musica de la opcion " + (buena ? "Buena" : "Mala") + " en '" + seccion.Nombre + "'.", this);
+            Debug.LogError("MusicaPorSeccion: falta la musica de la opcion " + (derecha ? "Derecha" : "Izquierda") + " en '" + seccion.Nombre + "'.", this);
 
         return tema;
-    }
-
-    /// <summary>La ultima letra de la secuencia dice que se acaba de elegir.</summary>
-    static bool FueBuena(string secuencia)
-    {
-        if (string.IsNullOrEmpty(secuencia)) return true;
-
-        return secuencia[secuencia.Length - 1] == 'B';
     }
 
     void VigilarElFinal()

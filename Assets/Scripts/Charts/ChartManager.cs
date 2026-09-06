@@ -138,12 +138,22 @@ public class ChartManager : MonoBehaviour
             return;
         }
 
-        // 2. Arrancar la musica. Los dos caminos de ReturnToDefault() llaman a Play()
-        //    antes de devolver el control, asi que al volver de aqui ya esta sonando.
+        // [CAMBIO: fundido de la intermision] ReturnToDefault() ya NO deja la musica
+        // sonando al volver: primero funde el tema anterior y solo despues arranca el
+        // nuevo. Hay que preguntarle cuanto va a tardar ANTES de llamarla, porque ella
+        // misma cambia la respuesta al ponerse en marcha.
+        //
+        // Sin este retardo el cero del chart quedaria en "ahora" mientras la cancion
+        // empieza segundo y medio despues, o sea que todas las notas irian adelantadas.
+        // Al arrancar el nivel no hay nada sonando, asi que el retardo es 0 y el cero se
+        // queda donde estaba.
+        float retardoDeLaMusica = MusicManager.Instance.RetardoAlVolverAlDefault;
+
+        // 2. Arrancar la musica (o su fundido de salida, si habia algo sonando).
         MusicManager.Instance.ReturnToDefault();
 
-        // 3. Y AHORA fijar el cero, con la musica ya en marcha.
-        currentTime = Time.timeSinceLevelLoad;
+        // 3. Y AHORA fijar el cero, en el instante en que la cancion va a empezar.
+        currentTime = Time.timeSinceLevelLoad + retardoDeLaMusica;
         chart.Desplazar(currentTime);
         MusicManager.Instance.SetTimeSinceBegin(currentTime);
 
@@ -151,7 +161,8 @@ public class ChartManager : MonoBehaviour
 
         if (LogDelArranque)
             Debug.Log("ChartManager: '" + newFilename + "' con cero en t=" + currentTime.ToString("F3")
-                + " s y " + chart.notes.Length + " notas.", this);
+                + " s (retardo de fundido " + retardoDeLaMusica.ToString("F2") + " s) y "
+                + chart.notes.Length + " notas.", this);
     }
 
     /// <summary>
