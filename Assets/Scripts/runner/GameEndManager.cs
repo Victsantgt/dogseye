@@ -95,9 +95,6 @@ public class GameEndManager : MonoBehaviour
     [Tooltip("Opacidad de esa banda. Las laminas son sobre blanco, asi que un blanco a media opacidad apaga el dibujo sin que se note un recuadro duro.")]
     [Range(0f, 1f)] public float OpacidadDeLaBanda = 0.75f;
 
-    [Tooltip("Que opcion lleva al final bueno.")]
-    public DecisionManager.Opcion OpcionBuena = DecisionManager.Opcion.Izquierda;
-
     [Header("Texto principal: uno por cada final posible")]
     [Tooltip("Muestra el resumen de conteo sobre la lamina. Desmarcado por defecto: la lamina ya cuenta la historia y el texto la ensucia.")]
     public bool MostrarResumen = false;
@@ -247,24 +244,22 @@ public class GameEndManager : MonoBehaviour
     public void TerminarConFinal(TipoDeFinal cual)
     {
         if (terminado) return;
- 
-        DecisionManager.Opcion buena = OpcionBuena;
-        DecisionManager.Opcion mala = buena == DecisionManager.Opcion.Derecha
-            ? DecisionManager.Opcion.Izquierda
-            : DecisionManager.Opcion.Derecha;
- 
+
+        DecisionManager.Opcion buena = DecisionManager.Opcion.Izquierda;
+        DecisionManager.Opcion mala = DecisionManager.Opcion.Derecha;
+
         int total = Mathf.Max(1, DecisionesParaFinal);
         if (cual == TipoDeFinal.Neutral && total < 2)
-            Debug.LogWarning("GameEndManager: con " + total + " decision no se puede montar un final neutro.", this);
- 
+            Debug.LogWarning("GameEndManager: con " + total + " decision no se puede montar un final neutral.", this);
+
         decisiones.Clear();
         for (int i = 0; i < total; i++)
         {
             if (cual == TipoDeFinal.Bueno) decisiones.Add(buena);
             else if (cual == TipoDeFinal.Malo) decisiones.Add(mala);
-            else decisiones.Add(i == 0 ? mala : buena);   // mezcla: al menos una de cada
+            else decisiones.Add(i == 0 ? mala : buena);
         }
- 
+
         Debug.Log("GameEndManager: final de PRUEBA '" + cual + "' con la secuencia " + SecuenciaActual(), this);
         Terminar();
     }
@@ -376,16 +371,16 @@ public class GameEndManager : MonoBehaviour
     /// </summary>
     public Final FinalElegido()
     {
-        int minimalistas = 0, consumistas = 0;
+        int derechas = 0, izquierdas = 0;
         for (int i = 0; i < decisiones.Count; i++)
         {
-            if (decisiones[i] == OpcionBuena) minimalistas++;
-            else consumistas++;
+            if (decisiones[i] == DecisionManager.Opcion.Derecha) derechas++;
+            else izquierdas++;
         }
 
         if (decisiones.Count == 0) return Neutral;
-        if (consumistas == 0) return Malo;
-        if (minimalistas == 0) return Bueno;
+        if (derechas == 0) return Bueno;
+        if (izquierdas == 0) return Malo;
         return Neutral;
     }
 
