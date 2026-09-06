@@ -1422,7 +1422,7 @@ GameObject:
   - component: {fileID: 8285275968980143237}
   m_Layer: 0
   m_Name: ColliderNotas
-  m_TagString: Untagged
+  m_TagString: ColliderNotas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1482,8 +1482,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 5, y: 25.789398, z: 20.6}
-  m_Center: {x: 0, y: 10.3447, z: 0}
+  m_Size: {x: 7, y: 25.789398, z: 20.6}
+  m_Center: {x: 0.9750905, y: 10.3447, z: -3.5398184e-16}
 --- !u!114 &2708729514827188986
 MonoBehaviour:
   m_ObjectHideFlags: 0

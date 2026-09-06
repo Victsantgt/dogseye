@@ -64,9 +64,9 @@ public class Note : MonoBehaviour, IPooleableObject
         
         HitResult result;
 
-        if (delta <= 0.8f) result = HitResult.Perfect; 
-        else if (delta <= 2f) result = HitResult.Good;
-        else if (delta <= 2.5f) result = HitResult.Bad;
+        if (delta <= 1f) result = HitResult.Perfect; 
+        else if (delta <= 2.2f) result = HitResult.Good;
+        else if (delta <= 3f) result = HitResult.Bad;
         else result = HitResult.Miss;
 
         // [ANADIDO: salida despedida] Se pide ANTES de avisar al observer, porque
