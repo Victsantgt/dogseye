@@ -103,6 +103,21 @@ public class GameEndManager : MonoBehaviour
     /// <summary>Decisiones tomadas hasta ahora.</summary>
     public int DecisionesTomadas { get { return decisiones.Count; } }
 
+    // [ANADIDO: musica por seccion] MusicaPorSeccion necesita saber que se acaba de
+    // elegir. Antes lo sacaba de la ultima letra de SecuenciaActual(), pero eso se rompe
+    // en silencio cada vez que alguien renombra el enum Opcion (ya paso al pasar de
+    // Buena/Mala a Derecha/Izquierda: la letra cambio de 'B' a 'D' y la musica empezo a
+    // elegir siempre la variante contraria). Comparando el enum, un renombrado futuro
+    // da error de compilacion en vez de un fallo mudo.
+    /// <summary>
+    /// La ultima decision tomada. Si todavia no hay ninguna devuelve Derecha, que es la
+    /// que cuenta como buena; comprueba DecisionesTomadas antes si eso te importa.
+    /// </summary>
+    public DecisionManager.Opcion UltimaDecision
+    {
+        get { return decisiones.Count > 0 ? decisiones[decisiones.Count - 1] : DecisionManager.Opcion.Derecha; }
+    }
+
     void Awake()
     {
         if (PanelFinal != null)

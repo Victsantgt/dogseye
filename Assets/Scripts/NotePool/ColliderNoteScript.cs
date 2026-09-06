@@ -13,12 +13,22 @@ public class ColliderNoteScript : MonoBehaviour
     public InputActionReference noteLeft;
     public InputActionReference noteRight;
 
+    // [ANADIDO: nota central] Esta caja va de -5 a 0 respecto al jugador, o sea por
+    // detras de el. Vale para las laterales, que van desplazadas a los lados, pero la
+    // central llega de frente y tendria que atravesar el modelo antes de poder pulsarse.
+    // Por eso el carril del medio lo vigila una caja aparte, colocada por delante, que
+    // avisa por RegistrarMedio/SoltarMedio. Desmarca esto si algun dia se quiere volver
+    // a detectar el medio desde aqui.
+    [Header("Nota central")]
+    [Tooltip("Deja el carril del medio en manos del DetectorNotaCentral, que va por delante del jugador.")]
+    public bool ElMedioLoLlevaOtroCollider = true;
+
     private void OnTriggerEnter(Collider other)
     {
         Note note = other.GetComponent<Note>();
         if (note == null) return;
 
-        if (other.CompareTag("NoteMiddle"))
+        if (!ElMedioLoLlevaOtroCollider && other.CompareTag("NoteMiddle"))
             middleNote = note;
         if (other.CompareTag("NoteLeft"))
             leftNote = note;
@@ -34,6 +44,22 @@ public class ColliderNoteScript : MonoBehaviour
         if (note == middleNote) middleNote = null;
         if (note == leftNote) leftNote = null;
         if (note == rightNote) rightNote = null;
+    }
+
+    /// <summary>
+    /// [ANADIDO: nota central] Lo llama el DetectorNotaCentral cuando una nota del medio
+    /// entra en su caja. La pulsacion la sigue leyendo este script, que es el unico que
+    /// tiene las acciones de input.
+    /// </summary>
+    public void RegistrarMedio(Note nota)
+    {
+        middleNote = nota;
+    }
+
+    /// <summary>La nota del medio ha salido de la caja sin que nadie la pulse.</summary>
+    public void SoltarMedio(Note nota)
+    {
+        if (middleNote == nota) middleNote = null;
     }
 
     private void Update()
