@@ -711,7 +711,6 @@ MonoBehaviour:
     - Conseguiste llegar a tiempo a tu casa
   BandaDelTexto: {fileID: 1440694823}
   OpacidadDeLaBanda: 1
-  OpcionBuena: 1
   MostrarResumen: 0
   TextoFinalUI: {fileID: 209814574}
   SeparadorDeTexto: '
@@ -776,7 +775,7 @@ MonoBehaviour:
   AparicionAutomatica: 0
   SegundosParaReaparecer: 5
   RetrasoPrimeraAparicion: 0
-  UsarTeclasDePrueba: 1
+  UsarTeclasDePrueba: 0
   TeclaAparecer: 36
   TeclaVencer: 16
   TeclaGanar: 28
@@ -856,7 +855,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c82e1b2bec2d0d4f86b9f0864460178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UsarTeclasDePrueba: 1
+  UsarTeclasDePrueba: 0
   Final: {fileID: 180828827}
   TeclaBueno: 21
   TeclaNeutral: 22
@@ -4174,6 +4173,10 @@ PrefabInstance:
       propertyPath: TextoMuerteUI
       value: 
       objectReference: {fileID: 1946450891}
+    - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
+      propertyPath: UsarTeclaDePrueba
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4940440757287095436, guid: f7b804ee098573640a9fba0b55c2b7d8, type: 3}
       propertyPath: 'ObjetosADesactivar.Array.data[0]'
       value: 
