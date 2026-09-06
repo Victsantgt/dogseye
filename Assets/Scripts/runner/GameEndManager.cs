@@ -46,7 +46,30 @@ public class GameEndManager : MonoBehaviour
     [Tooltip("Segundos que tardan los textos en aparecer, ya sobre el blanco.")]
     public float DuracionFundidoTexto = 0.8f;
 
+    // [ANADIDO: imagen de final] Segun lo que se haya elegido durante la partida sale
+    // una de tres laminas. Va dentro del grupo de textos a proposito: ese grupo ya se
+    // funde despues del blanco, asi que la imagen entra con el mismo fundido y no hace
+    // falta ninguna corrutina nueva.
+    [Header("Imagen del final")]
+    [Tooltip("Imagen a pantalla completa donde se pone la lamina del final. Cuelga del grupo de textos para heredar su fundido.")]
+    public Image ImagenFinal;
+
+    [Tooltip("Todas las decisiones fueron la opcion Derecha (pasillo estrecho).")]
+    public Sprite FinalMinimalista;
+
+    [Tooltip("Todas las decisiones fueron la opcion Izquierda (pasillo ancho).")]
+    public Sprite FinalConsumista;
+
+    [Tooltip("Se han mezclado las dos opciones.")]
+    public Sprite FinalMixto;
+
+    [Tooltip("Que opcion lleva al final minimalista. Si algun dia se le da la vuelta al significado de Derecha e Izquierda, esto es lo unico que hay que cambiar.")]
+    public DecisionManager.Opcion OpcionMinimalista = DecisionManager.Opcion.Derecha;
+
     [Header("Texto principal: uno por cada final posible")]
+    [Tooltip("Muestra el resumen de conteo sobre la lamina. Desmarcado por defecto: la lamina ya cuenta la historia y el texto la ensucia.")]
+    public bool MostrarResumen = false;
+
     public TextMeshProUGUI TextoFinalUI;
 
     [Tooltip("Un texto por cada combinacion de decisiones. Usa el menu contextual del componente para generarlas todas vacias.")]
@@ -200,10 +223,39 @@ public class GameEndManager : MonoBehaviour
             TextoFinalUI.text = TextoDeLaSecuencia();
 
         if (TextoResumenUI != null)
-            TextoResumenUI.text = TextoDelResumen();
+            TextoResumenUI.text = MostrarResumen ? TextoDelResumen() : "";
 
         if (TextoReinicioUI != null)
             TextoReinicioUI.text = TextoReinicio;
+
+        // [ANADIDO: imagen de final]
+        if (ImagenFinal != null)
+        {
+            Sprite lamina = LaminaDelFinal();
+            ImagenFinal.sprite = lamina;
+            ImagenFinal.enabled = lamina != null;
+        }
+    }
+
+    /// <summary>
+    /// [ANADIDO: imagen de final] Que lamina toca segun lo que se haya elegido.
+    ///
+    /// Se mira si TODAS las decisiones fueron iguales, en vez de comparar contra un 3
+    /// fijo: asi sigue valiendo si algun dia se cambia DecisionesParaFinal.
+    /// </summary>
+    Sprite LaminaDelFinal()
+    {
+        int minimalistas = 0, consumistas = 0;
+        for (int i = 0; i < decisiones.Count; i++)
+        {
+            if (decisiones[i] == OpcionMinimalista) minimalistas++;
+            else consumistas++;
+        }
+
+        if (decisiones.Count == 0) return FinalMixto;
+        if (consumistas == 0) return FinalMinimalista;
+        if (minimalistas == 0) return FinalConsumista;
+        return FinalMixto;
     }
 
     /// <summary>La secuencia jugada como cadena, por ejemplo "BBM".</summary>
@@ -300,7 +352,16 @@ public class GameEndManager : MonoBehaviour
             Reiniciar();
     }
 
-    /// <summary>Recarga la escena actual. Publica por si quieres un boton de UI.</summary>
+    // [ANADIDO: volver al menu] A donde lleva la tecla al terminar la partida. Antes
+    // esto recargaba siempre la escena actual; ahora, tras ver el final, se vuelve al
+    // menu principal. Dejandolo vacio se recupera el comportamiento anterior.
+    [Tooltip("Escena a la que lleva la tecla de reinicio. Vacio = recargar la escena actual, que era lo de antes.")]
+    public string EscenaAlPulsarReinicio = "MainMenu";
+
+    /// <summary>
+    /// Lleva a EscenaAlPulsarReinicio, o recarga la escena actual si esta vacio.
+    /// Publica por si quieres un boton de UI. La usa tambien PlayerDeathManager.
+    /// </summary>
     public void Reiniciar()
     {
         // MusicManager es un ASingleton con DontDestroyOnLoad: sobrevive a la recarga
@@ -309,7 +370,11 @@ public class GameEndManager : MonoBehaviour
             MusicManager.Instance.StopMusic();
 
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        // [CAMBIO: volver al menu]
+        SceneManager.LoadScene(string.IsNullOrEmpty(EscenaAlPulsarReinicio)
+            ? SceneManager.GetActiveScene().name
+            : EscenaAlPulsarReinicio);
     }
 
     /// <summary>
