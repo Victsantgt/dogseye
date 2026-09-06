@@ -66,6 +66,20 @@ Si añades otro efecto al puente, engánchalo al mismo sitio.
 - Al reinstanciar componentes en el Player, ojo con los duplicados: dos
   `TransitionRush` a la vez se pisaban escribiendo el multiplicador cada frame.
   Los que no admiten duplicado llevan `[DisallowMultipleComponent]`.
+- **En las notas laterales el collider y el dibujo NO están en el mismo sitio.**
+  Los clips `teddy` (`Animaciones2d` y `Animaciones2d 1`) no mueven la nota:
+  animan la `m_LocalPosition` del sprite hijo, y lo dejan a unas **6 unidades**
+  de la raíz — local `(-5.86, 2.22)` en `NoteLeft` y `(6.20, 2.22)` en
+  `NoteRight`. La raíz es la que lleva el Collider y la que se compara con el
+  `perfectMark`, así que **la detección va por la raíz y lo que se ve va seis
+  unidades más allá**. El ritmo sale bien porque el `perfectMark` está calibrado
+  sobre la raíz, pero el jugador acierta cuando el muñeco no está donde la caja.
+  Sospecha de esto si algo "acierta donde no está", si una ventana de acierto se
+  siente descolocada, o si algo que gira respecto a la nota parece **orbitar** en
+  vez de girar sobre sí mismo. `MovimientoNotaLateral` lo compensa al saltar
+  (congela ese Animator y junta raíz y dibujo), pero **no durante la caída**.
+  El arreglo de raíz es que el clip no toque `m_LocalPosition` y que el
+  desplazamiento lo lleve el objeto entero.
 
 ## Textos del juego
 

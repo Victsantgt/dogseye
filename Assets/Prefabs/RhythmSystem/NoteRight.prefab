@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3162056338003818773}
   - component: {fileID: 6903031237516265981}
   - component: {fileID: 6675717712714789062}
+  - component: {fileID: 5997799959231245909}
   m_Layer: 0
   m_Name: NoteRight
   m_TagString: NoteRight
@@ -53,7 +54,6 @@ MonoBehaviour:
   subject: {fileID: 0}
   music: {fileID: 0}
   ventanaAcierto: 0
-  destiny: {fileID: 0}
   perfectMark: {fileID: 0}
 --- !u!65 &6903031237516265981
 BoxCollider:
@@ -103,6 +103,51 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &5997799959231245909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6150757000461889613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69d74d7bbee673e4194cbe17f78b557f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Cesta: {fileID: 0}
+  NombreDeLaCesta: item reference
+  AjusteDelDestino: {x: 0, y: 0, z: 0}
+  Duracion: 0.55
+  AlturaDelSalto: 3.5
+  Avance:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1.6
+      outSlope: 1.6
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.4
+      outSlope: 0.4
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  GradosMinimos: 0
+  GradosMaximos: 360
+  EjeDeGiro: {x: 0, y: 0, z: 1}
+  QuitarColliderAlSaltar: 1
 --- !u!1001 &4798982784123171637
 PrefabInstance:
   m_ObjectHideFlags: 0

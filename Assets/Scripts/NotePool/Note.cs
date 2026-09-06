@@ -96,10 +96,20 @@ public class Note : MonoBehaviour, IPooleableObject
         if (result == HitResult.Miss) return false;
 
         MovimientoNotaCentral salida = GetComponent<MovimientoNotaCentral>();
-        if (salida == null) return false;
+        if (salida != null)
+        {
+            salida.SalirDespedida();
+            return true;
+        }
 
-        salida.SalirDespedida();
-        return true;
+        // [ANADIDO: notas laterales a la cesta] Las laterales no salen despedidas: dan
+        // un salto hasta la cesta y se hunden alli. Si por lo que sea no pueden saltar
+        // (falta la cesta), devuelve false y la nota se recicla al momento como antes.
+        MovimientoNotaLateral salto = GetComponent<MovimientoNotaLateral>();
+        if (salto != null)
+            return salto.Saltar();
+
+        return false;
     }
 
     // notifica el resultado
