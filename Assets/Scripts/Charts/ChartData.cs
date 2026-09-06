@@ -12,8 +12,8 @@ public class ChartData
             float noteSpeed = GameConfig.Instance.GetNoteSpeed();
             notes[i].time -= noteSpeed;
             notes[i].time += startDelay;
-            if (notes[i].lane == "Middle") notes[i].time -= 2;
-            else notes[i].time += 2.5f;
+            if (notes[i].lane == "Middle") notes[i].time += 1.9f;
+            else notes[i].time += 1f;
         }
     }
 
