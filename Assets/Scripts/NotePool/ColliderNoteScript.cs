@@ -23,6 +23,29 @@ public class ColliderNoteScript : MonoBehaviour
     [Tooltip("Deja el carril del medio en manos del DetectorNotaCentral, que va por delante del jugador.")]
     public bool ElMedioLoLlevaOtroCollider = true;
 
+    // [ANADIDO: antispam] Antes, pulsar un carril sin nota no costaba NADA: la
+    // pulsacion se descartaba en silencio. Con eso, machacar las teclas era
+    // estrictamente mejor que llevar el ritmo, porque cubrias toda la ventana sin
+    // arriesgar nada. Ahora una pulsacion al aire cuenta como fallo propio (HitResult
+    // .Vacio), y ademas cada carril se bloquea un rato tras cada pulsacion para que la
+    // penalizacion no se acumule quince veces por segundo.
+    [Header("Antispam")]
+    [Tooltip("Pulsar un carril sin nota cuenta como fallo. Es lo que hace que machacar las teclas deje de compensar.")]
+    public bool PenalizarPulsacionEnVacio = true;
+
+    [Tooltip("Segundos que cada carril ignora nuevas pulsaciones despues de una. Evita que un doble toque nervioso cobre dos veces. Cada carril lleva su propio bloqueo.")]
+    public float SegundosDeBloqueo = 0.15f;
+
+    [Tooltip("A quien se le avisa de la pulsacion en vacio. Es el mismo NoteHitSubject que usan las notas; si se deja vacio no se penaliza.")]
+    public NoteHitSubject subject;
+
+    [Tooltip("Deja rastro en consola de cada pulsacion al aire. Util para ajustar la penalizacion; desmarcalo despues.")]
+    public bool LogAlPenalizar = false;
+
+    float bloqueoMedio;
+    float bloqueoIzquierda;
+    float bloqueoDerecha;
+
     private void OnTriggerEnter(Collider other)
     {
         Note note = other.GetComponent<Note>();
@@ -64,20 +87,65 @@ public class ColliderNoteScript : MonoBehaviour
 
     private void Update()
     {
+        // [ANADIDO: antispam] Los bloqueos se descuentan SIEMPRE, antes de cualquier
+        // return, para que un carril no se quede bloqueado al entrar en un Narrow.
+        float dt = Time.deltaTime;
+        bloqueoMedio -= dt;
+        bloqueoIzquierda -= dt;
+        bloqueoDerecha -= dt;
+
         // El carril del medio siempre vale, en Narrow y en Wide.
-        if (noteMiddle.action.WasPressedThisFrame() && middleNote != null)
-            Hit(ref middleNote);
+        if (Pulsada(noteMiddle) && bloqueoMedio <= 0f)
+        {
+            bloqueoMedio = SegundosDeBloqueo;
+            if (middleNote != null) Hit(ref middleNote);
+            else Penalizar("Middle");
+        }
 
         // [ANADIDO: carriles laterales] En Narrow la A y la D no aciertan nada. Con las
         // notas laterales ya cortadas en el NoteSpawner esto casi nunca llega a hacer
         // falta, pero cubre el caso de que quedara una nota lateral en vuelo al cambiar
         // de terreno. Sin el componente en la escena devuelve siempre true.
+        //
+        // Ojo: aqui tambien se corta la penalizacion, y es lo correcto. En Narrow los
+        // laterales estan deshabilitados a proposito, asi que pulsarlos no es un fallo
+        // del jugador y no debe quitarle vida.
         if (!CarrilesLaterales.LateralesActivos) return;
 
-        if (noteLeft.action.WasPressedThisFrame() && leftNote != null)
-            Hit(ref leftNote);
-        if (noteRight.action.WasPressedThisFrame() && rightNote != null)
-            Hit(ref rightNote);
+        if (Pulsada(noteLeft) && bloqueoIzquierda <= 0f)
+        {
+            bloqueoIzquierda = SegundosDeBloqueo;
+            if (leftNote != null) Hit(ref leftNote);
+            else Penalizar("Left");
+        }
+
+        if (Pulsada(noteRight) && bloqueoDerecha <= 0f)
+        {
+            bloqueoDerecha = SegundosDeBloqueo;
+            if (rightNote != null) Hit(ref rightNote);
+            else Penalizar("Right");
+        }
+    }
+
+    static bool Pulsada(InputActionReference referencia)
+    {
+        return referencia != null && referencia.action != null && referencia.action.WasPressedThisFrame();
+    }
+
+    /// <summary>
+    /// [ANADIDO: antispam] Se ha pulsado un carril sin nota dentro. Se avisa al mismo
+    /// observer que las notas, con su propio resultado para poder distinguirlo de un
+    /// Miss de verdad y penalizarlo mas barato.
+    /// </summary>
+    private void Penalizar(string carril)
+    {
+        if (!PenalizarPulsacionEnVacio || subject == null) return;
+
+        NoteHitInfo info = new NoteHitInfo { lane = carril, result = HitResult.Vacio };
+        subject.NotifyObservers(info);
+
+        if (LogAlPenalizar)
+            Debug.Log("ColliderNoteScript: pulsacion al aire en '" + carril + "'", this);
     }
 
     private void Hit(ref Note note)

@@ -24,6 +24,13 @@ public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
     public float lifeLoseBad = 5f;
     public float lifeLoseMiss = 10f;
 
+    // [ANADIDO: antispam] Lo que cuesta pulsar un carril sin nota. Es la pieza que mata
+    // el exploit de machacar las teclas: antes una pulsacion en vacio no costaba NADA,
+    // asi que spamear era estrictamente mejor que llevar el ritmo. Deliberadamente mas
+    // barato que un Miss: machacar sangra rapido, pero adelantarse una vez sale barato.
+    [Tooltip("Vida que se pierde al pulsar la tecla de un carril sin que haya ninguna nota en el.")]
+    public float lifeLoseVacio = 3f;
+
     public Image healthBar;
 
     private void Start()
@@ -58,6 +65,13 @@ public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
             case HitResult.Miss:
                 currentLife -= lifeLoseMiss;
                 MusicManager.Instance.Play_SFX(noteAudio[0]);
+                break;
+
+            // [ANADIDO: antispam] Pulsacion al aire, sin nota en ese carril. Sin sonido
+            // de momento: al machacar sonaria decenas de veces por segundo. Si quereis
+            // darle feedback, mejor un clip propio y corto, no el de acierto.
+            case HitResult.Vacio:
+                currentLife -= lifeLoseVacio;
                 break;
         }
 
