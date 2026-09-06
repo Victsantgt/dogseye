@@ -69,11 +69,37 @@ public class Note : MonoBehaviour, IPooleableObject
         else if (delta <= 2.5f) result = HitResult.Bad;
         else result = HitResult.Miss;
 
+        // [ANADIDO: salida despedida] Se pide ANTES de avisar al observer, porque
+        // SendHit devuelve la nota al pool y eso cortaria la animacion en el mismo
+        // frame. La puntuacion se manda igual y en el mismo instante: lo unico que se
+        // retrasa es el reciclado. Solo lo hace la nota central, que es la unica con
+        // MovimientoNotaCentral; las laterales siguen desapareciendo al momento.
+        saliendoDespedida = PedirSalidaDespedida(result);
+
         SendHit(result != HitResult.Miss, result);
         Debug.Log("DISTANCIA DESTINO NOTA: " + delta + "RESULTADO:" + result);
 
-        // devolver al pool
-        Active = false;
+        // devolver al pool, salvo que se este yendo por su cuenta
+        if (!saliendoDespedida)
+            Active = false;
+    }
+
+    // [ANADIDO: salida despedida]
+    private bool saliendoDespedida;
+
+    /// <summary>
+    /// True si esta nota sabe salir despedida y se le ha pedido que lo haga. Mientras
+    /// este a true nadie mas debe devolverla al pool: ya lo hara ella al terminar.
+    /// </summary>
+    private bool PedirSalidaDespedida(HitResult result)
+    {
+        if (result == HitResult.Miss) return false;
+
+        MovimientoNotaCentral salida = GetComponent<MovimientoNotaCentral>();
+        if (salida == null) return false;
+
+        salida.SalirDespedida();
+        return true;
     }
 
     // notifica el resultado
@@ -90,8 +116,10 @@ public class Note : MonoBehaviour, IPooleableObject
 
        
 
+        // [ANADIDO: salida despedida] Si la nota se esta yendo por su cuenta no se toca
+        // aqui: se recicla ella sola cuando termine de salir de pantalla.
         IPooleableObject poolObj = GetComponent<IPooleableObject>();
-        if (poolObj != null) poolObj.Active = false;
+        if (poolObj != null && !saliendoDespedida) poolObj.Active = false;
         subject.NotifyObservers(info);
     }
     public void RegisterHit()
@@ -134,6 +162,10 @@ public class Note : MonoBehaviour, IPooleableObject
         // Aquí solo se limpian estados (no iniciar movimiento aquí)
         if (activeTween != null && activeTween.IsActive())
             activeTween.Kill();
+
+        // [ANADIDO: salida despedida] Sin esto, una nota reciclada seguiria creyendo que
+        // esta saliendo de pantalla y no se devolveria al pool al siguiente acierto.
+        saliendoDespedida = false;
 
         // [CAMBIO] Al reciclarse la devolvemos al padre que tenía originalmente, para
         // que el pool no acabe acumulando notas colgadas dentro de los carriles.
