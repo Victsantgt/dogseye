@@ -75,7 +75,6 @@ public class LifeManager : MonoBehaviour, IObserver<NoteHitInfo>
                 //MusicManager.Instance.Play_SFX(noteAudio[0]);
                 break;
             case HitResult.Bad:
-                currentLife -= lifeLoseBad;
                 MusicManager.Instance.Play_SFX(noteAudio[0]);
                 break;
             case HitResult.Miss:
