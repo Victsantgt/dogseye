@@ -148,8 +148,6 @@ public class GameEndManager : MonoBehaviour
     /// </summary>
     /// <returns>true si el final ya esta en marcha y por tanto hay que cortar lo que se estuviera haciendo.</returns>
 
-    private float EsperaAntesDeTerminar = 5f;
-
     private bool terminando = false;
     public bool IntentarTerminar()
     {
@@ -159,16 +157,10 @@ public class GameEndManager : MonoBehaviour
         if (!terminando)
         {
             terminando = true;
-            StartCoroutine(TerminarConEspera(EsperaAntesDeTerminar));
+            Terminar();
         }
 
         return true;
-    }
-
-    private IEnumerator TerminarConEspera(float segundos)
-    {
-        yield return new WaitForSeconds(segundos);
-        Terminar();
     }
 
     [ContextMenu("Terminar partida (prueba)")]
