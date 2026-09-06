@@ -249,3 +249,11 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  VelocidadHaciaArriba: 18
+  VelocidadHaciaLaDerecha: 12
+  GradosPorSegundo: 900
+  EjeDeGiro: {x: 0, y: 0, z: 1}
+  SegundosHastaDesaparecer: 0.8
+  QuitarColliderAlSalir: 1
+  PrefabExplosion: {fileID: 5711021395144954017, guid: 17cfbaa9e4a98e3449e6a5738ca5c0df, type: 3}
+  SegundosDeLaExplosion: 0.4666667

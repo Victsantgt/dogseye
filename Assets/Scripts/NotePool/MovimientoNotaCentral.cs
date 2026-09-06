@@ -56,6 +56,16 @@ public class MovimientoNotaCentral : MonoBehaviour
     [Tooltip("Segundos desde que sale despedida hasta que vuelve al pool. Para entonces ya esta fuera de plano.")]
     public float SegundosHastaDesaparecer = 0.8f;
 
+    [Tooltip("Apaga el collider de la nota al apartarla. Sin esto, mientras sale volando se queda atras y cruza la caja de fallo del carril, que la cuenta como Miss y le hace dano al jugador que acaba de acertarla.")]
+    public bool QuitarColliderAlSalir = true;
+
+    [Header("Explosion del impacto")]
+    [Tooltip("Se suelta en el punto del golpe al apartar la nota. Dejalo vacio para no tener explosion.")]
+    public GameObject PrefabExplosion;
+
+    [Tooltip("Segundos hasta destruir la explosion. Tiene que cubrir la duracion entera del clip.")]
+    public float SegundosDeLaExplosion = 0.45f;
+
     Transform jugador;
     Transform marca;
 
@@ -68,6 +78,7 @@ public class MovimientoNotaCentral : MonoBehaviour
     bool despedida;            // ya la hemos apartado de un manotazo
     float tiempoDespedida;
     Quaternion rotacionOriginal;
+    Collider[] colliders;
 
     /// <summary>True mientras todavia se esta acercando.</summary>
     public bool Moviendose { get { return moviendose; } }
@@ -101,10 +112,29 @@ public class MovimientoNotaCentral : MonoBehaviour
         transcurrido = 0f;
         moviendose = true;
 
-        // La nota viene del pool, asi que puede llegar girada de la vez anterior.
+        // La nota viene del pool, asi que puede llegar girada y sin collider de la vez
+        // anterior. Se deja como recien salida de fabrica.
         if (despedida) transform.rotation = rotacionOriginal;
         despedida = false;
         tiempoDespedida = 0f;
+        PonerColliders(true);
+    }
+
+    /// <summary>
+    /// Enciende o apaga los colliders de la nota. Al salir despedida se apagan: la nota
+    /// sigue subiendo mientras el jugador avanza, asi que acaba quedandose detras de el
+    /// y cruzando la caja de fallo del carril. Con el collider puesto eso se contaba
+    /// como Miss y le quitaba vida al jugador justo por haber acertado.
+    /// </summary>
+    void PonerColliders(bool encendidos)
+    {
+        if (!QuitarColliderAlSalir) return;
+
+        if (colliders == null)
+            colliders = GetComponentsInChildren<Collider>(true);
+
+        for (int i = 0; i < colliders.Length; i++)
+            if (colliders[i] != null) colliders[i].enabled = encendidos;
     }
 
     /// <summary>
@@ -119,6 +149,31 @@ public class MovimientoNotaCentral : MonoBehaviour
         moviendose = false;     // se acabo el acercamiento
         despedida = true;
         tiempoDespedida = 0f;
+
+        // Ya esta resuelta: a partir de aqui no debe chocar con nada por el camino.
+        PonerColliders(false);
+
+        SoltarExplosion();
+    }
+
+    /// <summary>
+    /// Deja la explosion en el punto exacto del golpe.
+    ///
+    /// Se instancia SIN padre, en coordenadas de mundo: asi se queda clavada donde
+    /// estaba la nota al pulsarla mientras esta sale disparada. Si colgara de la nota
+    /// viajaria con ella y se perderia la lectura de "el impacto ocurre aqui y el
+    /// enemigo sale despedido". Como no es hija de nadie, tampoco la arrastra el pool
+    /// cuando la nota se recicla: se destruye por su cuenta.
+    ///
+    /// Solo se llega aqui al acertar. Un Miss no llama a SalirDespedida(), asi que
+    /// fallar no enciende ninguna explosion.
+    /// </summary>
+    void SoltarExplosion()
+    {
+        if (PrefabExplosion == null) return;
+
+        GameObject boom = Instantiate(PrefabExplosion, transform.position, PrefabExplosion.transform.rotation);
+        Destroy(boom, Mathf.Max(0.05f, SegundosDeLaExplosion));
     }
 
     void OnDisable()
@@ -131,6 +186,9 @@ public class MovimientoNotaCentral : MonoBehaviour
             transform.rotation = rotacionOriginal;
             despedida = false;
         }
+
+        // Se devuelve el collider por si la nota se reutiliza sin pasar por Lanzar().
+        PonerColliders(true);
     }
 
     // LateUpdate y no Update: BasicMovement mueve al jugador en su Update, asi que
