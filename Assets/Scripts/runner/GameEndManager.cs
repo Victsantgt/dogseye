@@ -50,18 +50,51 @@ public class GameEndManager : MonoBehaviour
     // una de tres laminas. Va dentro del grupo de textos a proposito: ese grupo ya se
     // funde despues del blanco, asi que la imagen entra con el mismo fundido y no hace
     // falta ninguna corrutina nueva.
+    /// <summary>
+    /// [ANADIDO: imagen de final] Un final: su lamina y su texto, juntos.
+    ///
+    /// Estan en la misma ficha a proposito, para que quien escriba los textos vea al
+    /// lado la imagen a la que acompanan y no haya que cruzar dos listas.
+    /// </summary>
+    [System.Serializable]
+    public class Final
+    {
+        [Tooltip("Solo informativo, para saber cual es cual en el Inspector.")]
+        public string Nombre = "";
+
+        [Tooltip("Lamina a pantalla completa de este final.")]
+        public Sprite Lamina;
+
+        [Tooltip("Texto de este final. Sale sobre la lamina, en la banda inferior, por encima del 'pulsa R'. Se puede dejar vacio.")]
+        [TextArea(3, 8)]
+        public string Texto = "";
+    }
+
     [Header("Imagen del final")]
     [Tooltip("Imagen a pantalla completa donde se pone la lamina del final. Cuelga del grupo de textos para heredar su fundido.")]
     public Image ImagenFinal;
 
     [Tooltip("Todas las decisiones fueron la opcion Derecha (pasillo estrecho).")]
-    public Sprite FinalMinimalista;
+    public Final Minimalista = new Final { Nombre = "Minimalista (todas Derecha)" };
 
     [Tooltip("Todas las decisiones fueron la opcion Izquierda (pasillo ancho).")]
-    public Sprite FinalConsumista;
+    public Final Consumista = new Final { Nombre = "Consumista (todas Izquierda)" };
 
     [Tooltip("Se han mezclado las dos opciones.")]
-    public Sprite FinalMixto;
+    public Final Mixto = new Final { Nombre = "Mixto (mezcladas)" };
+
+    // [ANADIDO: legibilidad del texto] Banda que se pone DETRAS del texto del final.
+    //
+    // Hace falta porque no hay ningun hueco libre comun a las tres laminas: minimalista
+    // y mixto son casi todo blanco con el dibujo en el centro, pero consumista esta
+    // llena de coches, regalos y bolsas de arriba abajo, y el humo llega al borde
+    // superior. Buscar un sitio despejado no vale para las tres, asi que en vez de
+    // esquivar el dibujo se le pone un velo debajo al texto y se lee siempre.
+    [Tooltip("Banda semitransparente detras del texto del final, para que se lea sobre cualquier lamina. Opcional.")]
+    public Image BandaDelTexto;
+
+    [Tooltip("Opacidad de esa banda. Las laminas son sobre blanco, asi que un blanco a media opacidad apaga el dibujo sin que se note un recuadro duro.")]
+    [Range(0f, 1f)] public float OpacidadDeLaBanda = 0.75f;
 
     [Tooltip("Que opcion lleva al final minimalista. Si algun dia se le da la vuelta al significado de Derecha e Izquierda, esto es lo unico que hay que cambiar.")]
     public DecisionManager.Opcion OpcionMinimalista = DecisionManager.Opcion.Derecha;
@@ -192,6 +225,49 @@ public class GameEndManager : MonoBehaviour
         Terminar();
     }
 
+    // ===================== [ANADIDO: finales de prueba] =====================
+    // TEMPORAL. Lo usa el componente FinalesDePrueba para poder ver cada final sin
+    // jugarse la partida entera. Para quitarlo de la build: borra el componente
+    // FinalesDePrueba de LevelController y, si quieres, este bloque entero.
+    // =======================================================================
+
+    /// <summary>Cual de los tres finales se quiere forzar.</summary>
+    public enum TipoDeFinal { Minimalista, Consumista, Mixto }
+
+    /// <summary>
+    /// [ANADIDO: finales de prueba] Coloca las decisiones necesarias para que salga el
+    /// final pedido y termina la partida.
+    ///
+    /// NO se salta la logica normal: rellena la lista de decisiones y deja que decida
+    /// FinalElegido(), el mismo que corre en una partida de verdad. Asi lo que ves
+    /// probando es exactamente lo que va a pasar jugando, y no una version paralela que
+    /// se pueda desincronizar.
+    /// </summary>
+    public void TerminarConFinal(TipoDeFinal cual)
+    {
+        if (terminado) return;
+
+        DecisionManager.Opcion mini = OpcionMinimalista;
+        DecisionManager.Opcion cons = mini == DecisionManager.Opcion.Derecha
+            ? DecisionManager.Opcion.Izquierda
+            : DecisionManager.Opcion.Derecha;
+
+        int total = Mathf.Max(1, DecisionesParaFinal);
+        if (cual == TipoDeFinal.Mixto && total < 2)
+            Debug.LogWarning("GameEndManager: con " + total + " decision no se puede montar un final mixto.", this);
+
+        decisiones.Clear();
+        for (int i = 0; i < total; i++)
+        {
+            if (cual == TipoDeFinal.Minimalista) decisiones.Add(mini);
+            else if (cual == TipoDeFinal.Consumista) decisiones.Add(cons);
+            else decisiones.Add(i == 0 ? cons : mini);   // mezcla: al menos una de cada
+        }
+
+        Debug.Log("GameEndManager: final de PRUEBA '" + cual + "' con la secuencia " + SecuenciaActual(), this);
+        Terminar();
+    }
+
     void Terminar()
     {
         if (terminado) return;
@@ -219,31 +295,46 @@ public class GameEndManager : MonoBehaviour
 
     void RellenarTextos()
     {
+        // [CAMBIO: imagen de final] El texto principal ya no sale de FinalesPorSecuencia
+        // sino del propio final elegido, que es donde lo escribe el equipo.
+        Final elegido = FinalElegido();
+
         if (TextoFinalUI != null)
-            TextoFinalUI.text = TextoDeLaSecuencia();
+            TextoFinalUI.text = elegido != null ? elegido.Texto : "";
+
+        if (ImagenFinal != null)
+        {
+            Sprite lamina = elegido != null ? elegido.Lamina : null;
+            ImagenFinal.sprite = lamina;
+            ImagenFinal.enabled = lamina != null;
+        }
+
+        // La banda solo se ve si hay texto que arropar. Sin texto seria un recuadro
+        // gris flotando en medio de la lamina sin motivo.
+        if (BandaDelTexto != null)
+        {
+            bool hayTexto = elegido != null && !string.IsNullOrEmpty(elegido.Texto);
+            BandaDelTexto.enabled = hayTexto;
+
+            Color c = BandaDelTexto.color;
+            c.a = OpacidadDeLaBanda;
+            BandaDelTexto.color = c;
+        }
 
         if (TextoResumenUI != null)
             TextoResumenUI.text = MostrarResumen ? TextoDelResumen() : "";
 
         if (TextoReinicioUI != null)
             TextoReinicioUI.text = TextoReinicio;
-
-        // [ANADIDO: imagen de final]
-        if (ImagenFinal != null)
-        {
-            Sprite lamina = LaminaDelFinal();
-            ImagenFinal.sprite = lamina;
-            ImagenFinal.enabled = lamina != null;
-        }
     }
 
     /// <summary>
-    /// [ANADIDO: imagen de final] Que lamina toca segun lo que se haya elegido.
+    /// [ANADIDO: imagen de final] Que final toca segun lo que se haya elegido.
     ///
     /// Se mira si TODAS las decisiones fueron iguales, en vez de comparar contra un 3
     /// fijo: asi sigue valiendo si algun dia se cambia DecisionesParaFinal.
     /// </summary>
-    Sprite LaminaDelFinal()
+    public Final FinalElegido()
     {
         int minimalistas = 0, consumistas = 0;
         for (int i = 0; i < decisiones.Count; i++)
@@ -252,10 +343,10 @@ public class GameEndManager : MonoBehaviour
             else consumistas++;
         }
 
-        if (decisiones.Count == 0) return FinalMixto;
-        if (consumistas == 0) return FinalMinimalista;
-        if (minimalistas == 0) return FinalConsumista;
-        return FinalMixto;
+        if (decisiones.Count == 0) return Mixto;
+        if (consumistas == 0) return Minimalista;
+        if (minimalistas == 0) return Consumista;
+        return Mixto;
     }
 
     /// <summary>La secuencia jugada como cadena, por ejemplo "BBM".</summary>
