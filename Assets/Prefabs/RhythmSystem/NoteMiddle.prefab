@@ -257,3 +257,4 @@ MonoBehaviour:
   QuitarColliderAlSalir: 1
   PrefabExplosion: {fileID: 5711021395144954017, guid: 17cfbaa9e4a98e3449e6a5738ca5c0df, type: 3}
   SegundosDeLaExplosion: 0.4666667
+  blast: {fileID: 8300000, guid: 11e3b397753b09f4caa09a65589fc30f, type: 3}

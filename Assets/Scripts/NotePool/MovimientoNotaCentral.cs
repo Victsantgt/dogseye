@@ -1,3 +1,4 @@
+using Patterns.Singleton;
 using UnityEngine;
 
 /// <summary>
@@ -79,6 +80,8 @@ public class MovimientoNotaCentral : MonoBehaviour
     float tiempoDespedida;
     Quaternion rotacionOriginal;
     Collider[] colliders;
+
+    public AudioClip blast;
 
     /// <summary>True mientras todavia se esta acercando.</summary>
     public bool Moviendose { get { return moviendose; } }
@@ -174,6 +177,8 @@ public class MovimientoNotaCentral : MonoBehaviour
 
         GameObject boom = Instantiate(PrefabExplosion, transform.position, PrefabExplosion.transform.rotation);
         Destroy(boom, Mathf.Max(0.05f, SegundosDeLaExplosion));
+
+        MusicManager.Instance.Play_SFX(blast, true);
     }
 
     void OnDisable()
