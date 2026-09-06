@@ -39,15 +39,15 @@ public class FinalesDePrueba : MonoBehaviour
     [Tooltip("Quien termina la partida. Si se deja vacio se busca en este mismo GameObject.")]
     public GameEndManager Final;
 
-    [Header("Teclas")]
-    [Tooltip("Termina con el final minimalista.")]
-    public Key TeclaMinimalista = Key.G;
+    [Tooltip("Termina con el final consumista.")]
+    public Key TeclaBueno = Key.G;
 
     [Tooltip("Termina con el final mixto.")]
-    public Key TeclaMixto = Key.H;
+    public Key TeclaNeutral = Key.H;
 
-    [Tooltip("Termina con el final consumista.")]
-    public Key TeclaConsumista = Key.J;
+    [Header("Teclas")]
+    [Tooltip("Termina con el final minimalista.")]
+    public Key TeclaMalo = Key.J;
 
     void Awake()
     {
@@ -62,19 +62,18 @@ public class FinalesDePrueba : MonoBehaviour
         Keyboard teclado = Keyboard.current;
         if (teclado == null) return;
 
-        if (teclado[TeclaMinimalista].wasPressedThisFrame) Minimalista();
-        if (teclado[TeclaMixto].wasPressedThisFrame) Mixto();
-        if (teclado[TeclaConsumista].wasPressedThisFrame) Consumista();
+        if (teclado[TeclaBueno].wasPressedThisFrame) Bueno();
+        if (teclado[TeclaNeutral].wasPressedThisFrame) Neutral();
+        if (teclado[TeclaMalo].wasPressedThisFrame) Malo();
     }
+    [ContextMenu("Terminar con final Bueno (Todo Izquierda)")]
+    public void Bueno() { Lanzar(GameEndManager.TipoDeFinal.Bueno); }
 
-    [ContextMenu("Terminar con final MINIMALISTA")]
-    public void Minimalista() { Lanzar(GameEndManager.TipoDeFinal.Minimalista); }
+    [ContextMenu("Terminar con final Neutral")]
+    public void Neutral() { Lanzar(GameEndManager.TipoDeFinal.Neutral); }
 
-    [ContextMenu("Terminar con final MIXTO")]
-    public void Mixto() { Lanzar(GameEndManager.TipoDeFinal.Mixto); }
-
-    [ContextMenu("Terminar con final CONSUMISTA")]
-    public void Consumista() { Lanzar(GameEndManager.TipoDeFinal.Consumista); }
+    [ContextMenu("Terminar con final Malo (Todo Derecha)")]
+    public void Malo() { Lanzar(GameEndManager.TipoDeFinal.Malo); }
 
     void Lanzar(GameEndManager.TipoDeFinal cual)
     {
