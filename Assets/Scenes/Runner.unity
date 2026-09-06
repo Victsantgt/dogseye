@@ -977,7 +977,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c82e1b2bec2d0d4f86b9f0864460178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UsarTeclasDePrueba: 0
+  UsarTeclasDePrueba: 1
   Final: {fileID: 180828827}
   TeclaMinimalista: 21
   TeclaMixto: 22
