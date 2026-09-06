@@ -42,6 +42,16 @@ public class CarrilesLaterales : MonoBehaviour
     [Tooltip("Boton D del HUD (Button_R). Cuelga de Player/-- RHYTHM SYSTEM --/Canvas/")]
     public GameObject BotonDerecha;
 
+    // [ANADIDO: sin laterales en la primera seccion] De donde se saca en que seccion
+    // vamos. Se reutiliza el contador del GameEndManager, que es el mismo que usa
+    // MusicaPorSeccion para elegir tema: cero decisiones = seccion 1.
+    [Tooltip("De donde se lee cuantas decisiones se han tomado. Si se deja vacio se busca en este mismo GameObject.")]
+    public GameEndManager Final;
+
+    [Header("Primera seccion")]
+    [Tooltip("En la seccion 1, antes de la primera decision, los laterales se apagan aunque el pasillo sea Wide. El jugador empieza solo con la tecla del medio y los lados se desbloquean al llegar a la seccion 2.")]
+    public bool SinLateralesEnLaPrimeraSeccion = true;
+
     [Header("Ajustes")]
     [Tooltip("Deja rastro en consola cada vez que los laterales se apagan o se encienden. Util para comprobar el momento; desmarcalo cuando este ajustado.")]
     public bool LogAlCambiar = true;
@@ -77,6 +87,21 @@ public class CarrilesLaterales : MonoBehaviour
     {
         if (Generador == null)
             Generador = GetComponent<SegmentGenerator>();
+
+        // [ANADIDO: sin laterales en la primera seccion]
+        if (Final == null)
+            Final = GetComponent<GameEndManager>();
+    }
+
+    /// <summary>
+    /// [ANADIDO: sin laterales en la primera seccion]
+    /// True mientras no se haya contestado ninguna pregunta, o sea durante la seccion 1.
+    /// Sin GameEndManager asignado se da por hecho que no, para no apagar el HUD entero
+    /// por una referencia que falte.
+    /// </summary>
+    bool EsLaPrimeraSeccion
+    {
+        get { return Final != null && Final.DecisionesTomadas == 0; }
     }
 
     void OnEnable()
@@ -114,6 +139,14 @@ public class CarrilesLaterales : MonoBehaviour
         // Narrow -> sin lados. Cualquier otro tipo -> con lados.
         bool deberian = Generador.TipoActual != TipoSegmento.Narrow;
 
+        // [ANADIDO: sin laterales en la primera seccion] La seccion 1 va siempre sin
+        // lados, sea Wide o no: se arranca solo con la tecla del medio y los laterales
+        // se desbloquean al entrar en la seccion 2. El motivo se guarda aparte para
+        // poder decirlo en el log, que si no parece que el Wide no se este respetando.
+        bool porSerLaPrimera = SinLateralesEnLaPrimeraSeccion && EsLaPrimeraSeccion;
+        if (porSerLaPrimera)
+            deberian = false;
+
         if (inicializado && deberian == activos)
             return;
 
@@ -123,6 +156,7 @@ public class CarrilesLaterales : MonoBehaviour
 
         if (LogAlCambiar)
             Debug.Log("CarrilesLaterales: terreno " + Generador.TipoActual
+                + (porSerLaPrimera ? " pero seccion 1" : "")
                 + " -> carriles laterales " + (activos ? "ACTIVOS" : "apagados"), this);
     }
 
