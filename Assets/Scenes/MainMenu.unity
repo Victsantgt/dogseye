@@ -269,6 +269,11 @@ MonoBehaviour:
   Adornos:
   - {fileID: 1753246752}
   OcultarAlEmpezar: 1
+  SonidoAlEntrar: {fileID: 8300000, guid: cf17719e0ecf29042b6232221c43e6ae, type: 3}
+  Volumen: 1
+  SegundosMaximos: 0
+  SegundosDeFundido: 0.15
+  Altavoz: {fileID: 0}
 --- !u!1 &357175553
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,6 +802,11 @@ MonoBehaviour:
   Adornos:
   - {fileID: 563846574}
   OcultarAlEmpezar: 1
+  SonidoAlEntrar: {fileID: 8300000, guid: 0ddf3eec01a3ab146a269f41a56887f5, type: 3}
+  Volumen: 1
+  SegundosMaximos: 0.45
+  SegundosDeFundido: 0.15
+  Altavoz: {fileID: 0}
 --- !u!1 &977573552
 GameObject:
   m_ObjectHideFlags: 0
