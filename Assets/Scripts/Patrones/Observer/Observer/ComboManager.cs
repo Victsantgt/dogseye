@@ -17,6 +17,8 @@ public class ComboManager : MonoBehaviour, IObserver<NoteHitInfo>
     public float popScale = 0.5f;      
     public float popDuration = 0.2f;
 
+    private Sequence seq;
+
     private void Start()
     {
         if (subject != null)
@@ -95,14 +97,20 @@ public class ComboManager : MonoBehaviour, IObserver<NoteHitInfo>
 
                 // Hacer pop
                 comboText.transform.localScale = Vector3.one;
-                comboText.transform
+
+                seq.Kill();
+                seq = DOTween.Sequence();
+
+                seq.Append(comboText.transform
                     .DOScale(popScale, popDuration)
                     .SetEase(Ease.OutBack)
                     .OnComplete(() =>
                         comboText.transform
                             .DOScale(Vector3.one, popDuration * 0.6f)
                             .SetEase(Ease.OutBack)
-                    );
+                    ));
+                seq.AppendInterval(2);
+                seq.Append(comboText.transform.DOScale(0, 0.2f).SetEase(Ease.OutBack));
             }
         }
     }
