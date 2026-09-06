@@ -39,13 +39,13 @@ public class FinalesDePrueba : MonoBehaviour
     [Tooltip("Quien termina la partida. Si se deja vacio se busca en este mismo GameObject.")]
     public GameEndManager Final;
 
+    [Header("Teclas")]
     [Tooltip("Termina con el final consumista.")]
     public Key TeclaBueno = Key.G;
 
     [Tooltip("Termina con el final mixto.")]
     public Key TeclaNeutral = Key.H;
 
-    [Header("Teclas")]
     [Tooltip("Termina con el final minimalista.")]
     public Key TeclaMalo = Key.J;
 
