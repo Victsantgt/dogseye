@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Runner.unity
     guid: c6433a4a8c1f62d43bd04904ee60fe09
+  - enabled: 1
+    path: Assets/Scenes/Derrota.unity
+    guid: a4fff74763ff7ae46b0f8ce6fd883894
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

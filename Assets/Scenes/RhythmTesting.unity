@@ -517,6 +517,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: -- RHYTHM SYSTEM --
       objectReference: {fileID: 0}
+    - target: {fileID: 7628068843704627541, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
+      propertyPath: transicion
+      value: 
+      objectReference: {fileID: 641808053869362338}
     - target: {fileID: 7821578013757784519, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -562,6 +566,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
+--- !u!114 &641808053869362338 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2549614566814864583, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
+  m_PrefabInstance: {fileID: 641808053869362337}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f1ece16b99f3e04a9cc46c0274b83f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2397521825155015712
 PrefabInstance:
   m_ObjectHideFlags: 0

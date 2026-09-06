@@ -155,8 +155,8 @@ GameObject:
   - component: {fileID: 1092407660185175746}
   - component: {fileID: 1507611146167462089}
   - component: {fileID: 4940440757287095436}
-  - component: {fileID: 6229833876758298991}
-  - component: {fileID: 6025297764083862398}
+  - component: {fileID: 8520771572436528004}
+  - component: {fileID: 4759083464850189313}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -322,7 +322,7 @@ MonoBehaviour:
   ObjetosADesactivar:
   - {fileID: 0}
   - {fileID: 0}
---- !u!95 &6229833876758298991
+--- !u!95 &8520771572436528004
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
@@ -344,7 +344,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6025297764083862398
+--- !u!114 &4759083464850189313
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -539,22 +539,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1591134152834062666}
     m_Modifications:
-    - target: {fileID: 3316649057582635019, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
+    - target: {fileID: 689471921796191546, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
       propertyPath: Animator
       value: 
-      objectReference: {fileID: 4158065060952645486}
-    - target: {fileID: 7114725935918293200, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
-      propertyPath: Visible
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7114725935918293200, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7114725935918293200, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
-      propertyPath: GizmoEnLaEscena
-      value: 0
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1148650207374149882}
     - target: {fileID: 7259562111853031008, guid: 76911feb32a2c224fb6024d98e0f6651, type: 3}
       propertyPath: m_Name
       value: -- RHYTHM SYSTEM --
@@ -687,14 +675,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 429aa692e9fcf7944a971da6f172e727, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4158065060952645486}
+      addedObject: {fileID: 1148650207374149882}
   m_SourcePrefab: {fileID: 100100000, guid: 429aa692e9fcf7944a971da6f172e727, type: 3}
 --- !u!1 &5113176075213578997 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 429aa692e9fcf7944a971da6f172e727, type: 3}
   m_PrefabInstance: {fileID: 5347126657296408484}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &4158065060952645486
+--- !u!95 &1148650207374149882
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
