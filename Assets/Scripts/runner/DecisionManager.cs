@@ -1,3 +1,4 @@
+using Patterns.Singleton;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -77,6 +78,8 @@ public class DecisionManager : MonoBehaviour
 
     /// <summary>Segundos que le quedan al jugador para responder.</summary>
     public float TiempoRestante { get { return tiempoRestante; } }
+
+    public AudioClip ring;
 
     void Awake()
     {
@@ -259,6 +262,8 @@ public class DecisionManager : MonoBehaviour
 
         Debug.Log("Decision: " + elegida + (porTiempo ? " (al azar, se acabo el tiempo)" : "")
             + " -> terreno " + objetivo + (hayTransicion ? " (con transicion)" : " (sin cambio)"));
+
+        MusicManager.Instance.Play_SFX(ring);
     }
 
     void RefrescarCuentaAtras()
