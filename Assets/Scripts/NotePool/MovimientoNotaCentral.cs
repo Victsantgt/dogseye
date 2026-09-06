@@ -30,10 +30,31 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class MovimientoNotaCentral : MonoBehaviour
 {
+    [Header("Acercamiento")]
     [Tooltip("Forma de la frenada. Eje X: 0 recien salida, 1 ya colocada. Eje Y: 0 en el punto de spawn, 1 en la marca de acierto. Por defecto entra rapido y termina casi parada.")]
     public AnimationCurve Frenada = new AnimationCurve(
         new Keyframe(0f, 0f, 2.2f, 2.2f),
         new Keyframe(1f, 1f, 0f, 0f));
+
+    [Header("Salida al acertarla")]
+    // [ANADIDO: salida despedida] Al pulsarla bien la nota ya no se desvanece: sale
+    // disparada arriba y a la derecha girando, como si la apartaramos de un manotazo.
+    // El aviso de puntuacion se manda igual en el momento del acierto; lo unico que se
+    // retrasa es la vuelta al pool, para que de tiempo a verla salir.
+    [Tooltip("A que velocidad sube al ser expulsada.")]
+    public float VelocidadHaciaArriba = 18f;
+
+    [Tooltip("Cuanto se va hacia la derecha al mismo tiempo. Negativo la manda a la izquierda.")]
+    public float VelocidadHaciaLaDerecha = 12f;
+
+    [Tooltip("Grados por segundo. Es el giro rapido de 'expulsada de la pantalla'.")]
+    public float GradosPorSegundo = 900f;
+
+    [Tooltip("Eje del giro. Por defecto Z, que es el eje de la camara: el sprite gira en el plano de la pantalla y se ve el giro entero. Con X o Y se pondria de canto y desapareceria.")]
+    public Vector3 EjeDeGiro = Vector3.forward;
+
+    [Tooltip("Segundos desde que sale despedida hasta que vuelve al pool. Para entonces ya esta fuera de plano.")]
+    public float SegundosHastaDesaparecer = 0.8f;
 
     Transform jugador;
     Transform marca;
@@ -44,8 +65,15 @@ public class MovimientoNotaCentral : MonoBehaviour
     float transcurrido;
     bool moviendose;
 
+    bool despedida;            // ya la hemos apartado de un manotazo
+    float tiempoDespedida;
+    Quaternion rotacionOriginal;
+
     /// <summary>True mientras todavia se esta acercando.</summary>
     public bool Moviendose { get { return moviendose; } }
+
+    /// <summary>True mientras esta saliendo disparada tras acertarla.</summary>
+    public bool Despedida { get { return despedida; } }
 
     /// <summary>
     /// La llama el NoteSpawner justo despues de colocar la nota en su punto de salida.
@@ -72,18 +100,45 @@ public class MovimientoNotaCentral : MonoBehaviour
         duracion = Mathf.Max(0.01f, segundos);
         transcurrido = 0f;
         moviendose = true;
+
+        // La nota viene del pool, asi que puede llegar girada de la vez anterior.
+        if (despedida) transform.rotation = rotacionOriginal;
+        despedida = false;
+        tiempoDespedida = 0f;
+    }
+
+    /// <summary>
+    /// La llama Note.OnPlayerHit() al acertarla. Deja de acercarse y sale disparada
+    /// arriba y a la derecha girando, hasta que se recicla sola.
+    /// </summary>
+    public void SalirDespedida()
+    {
+        if (despedida) return;
+
+        rotacionOriginal = transform.rotation;
+        moviendose = false;     // se acabo el acercamiento
+        despedida = true;
+        tiempoDespedida = 0f;
     }
 
     void OnDisable()
     {
-        // Al volver al pool se corta, que si no la reutilizaria a medio camino.
+        // Al volver al pool se corta todo, que si no la reutilizaria a medio camino.
         moviendose = false;
+
+        if (despedida)
+        {
+            transform.rotation = rotacionOriginal;
+            despedida = false;
+        }
     }
 
     // LateUpdate y no Update: BasicMovement mueve al jugador en su Update, asi que
     // leyendo aqui su posicion la nota no va un frame por detras.
     void LateUpdate()
     {
+        if (despedida) { SalirDeLaPantalla(); return; }
+
         if (!moviendose) return;
 
         if (jugador == null || marca == null)
@@ -107,5 +162,29 @@ public class MovimientoNotaCentral : MonoBehaviour
             // Ya esta colocada. A partir de aqui se queda quieta y el jugador la rebasa.
             moviendose = false;
         }
+    }
+
+    /// <summary>
+    /// Sube y se va hacia la derecha girando, y al cabo de SegundosHastaDesaparecer
+    /// vuelve al pool. Se mueve en coordenadas de MUNDO y no respecto al jugador: ya no
+    /// le acompana, la hemos echado.
+    /// </summary>
+    void SalirDeLaPantalla()
+    {
+        float dt = Time.deltaTime;
+        tiempoDespedida += dt;
+
+        transform.position += new Vector3(VelocidadHaciaLaDerecha, VelocidadHaciaArriba, 0f) * dt;
+
+        if (GradosPorSegundo != 0f && EjeDeGiro != Vector3.zero)
+            transform.Rotate(EjeDeGiro.normalized * GradosPorSegundo * dt, Space.World);
+
+        if (tiempoDespedida < SegundosHastaDesaparecer) return;
+
+        // Se devuelve al pool. El Active del Note dispara su OnDisable, que es donde se
+        // deshace el giro para que la siguiente salga derecha.
+        Note nota = GetComponent<Note>();
+        if (nota != null) nota.Active = false;
+        else gameObject.SetActive(false);
     }
 }
