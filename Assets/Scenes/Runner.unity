@@ -688,7 +688,7 @@ MonoBehaviour:
   ImagenFinal: {fileID: 67451121}
   Bueno:
     Nombre: Bueno (todas Izquierda)
-    Lamina: {fileID: 21300000, guid: 241c1d2eab949e140b9854e284a89c5b, type: 3}
+    Lamina: {fileID: 21300000, guid: 35ce01b1bbf57df4da95a3532d184946, type: 3}
     Texto:
     - Decidiste ignorar a tu hijo cocinando
     - "No te import\xF3 que tu hija fuera arrestada"
