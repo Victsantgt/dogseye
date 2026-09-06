@@ -3,6 +3,7 @@ using TMPro;
 using Patterns.Observer.Interfaces;
 using DG.Tweening;
 using Patterns.Singleton;
+using UnityEngine.UI;
 
 public class ComboManager : MonoBehaviour, IObserver<NoteHitInfo>
 {
@@ -12,17 +13,28 @@ public class ComboManager : MonoBehaviour, IObserver<NoteHitInfo>
     private int combo = 0;
     public int score = 0;
 
+    public Image image;
+    public RectTransform rct;
+
+    public Sprite perfect;
+    public Sprite good;
+    public Sprite bad;
+    public Sprite miss;
+
     //animación
     [Header("Tween Settings")]
     public float popScale = 0.5f;      
     public float popDuration = 0.2f;
 
     private Sequence seq;
+    private Sequence seqImage;
 
     private void Start()
     {
         if (subject != null)
             subject.AddObserver(this);
+
+        rct.DOScale(0, 0);
 
         UpdateComboText(false);
     }
@@ -69,11 +81,13 @@ public class ComboManager : MonoBehaviour, IObserver<NoteHitInfo>
         switch (data.result)
         {
             case HitResult.Perfect:
+                image.sprite = perfect;
                 score += 4750;
                 combo++;
                 break;
 
             case HitResult.Good:
+                image.sprite = good;
                 score += 2500;
                 combo++;
                 break;
@@ -81,18 +95,31 @@ public class ComboManager : MonoBehaviour, IObserver<NoteHitInfo>
             // El Bad sigue puntuando: le has dado. Lo que ya no hace es mantener la
             // racha. Si algun dia se quiere que tampoco de puntos, quita esta linea.
             case HitResult.Bad:
+                image.sprite = bad;
                 score += 1000;
-                combo = 0;
+                combo++;
                 break;
 
             case HitResult.Miss:
+                image.sprite = miss;
                 combo = 0;
                 break;
 
             case HitResult.Vacio:
+                image.sprite = miss;
                 combo = 0;
                 break;
         }
+
+        seqImage.Kill();
+
+        seqImage = DOTween.Sequence();
+
+        seqImage.Append(rct.DOScale(0, 0));
+        seqImage.Append(rct.DOScale(1, 0.4f).SetEase(Ease.OutBack));
+        seqImage.AppendInterval(0.3f);
+        seqImage.Append(rct.DOScale(0, 0.2f).SetEase(Ease.OutBack));
+
         // Solo animar si sube
         bool shouldAnimate = combo > oldCombo;
 
