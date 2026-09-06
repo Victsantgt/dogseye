@@ -66,22 +66,21 @@ public class GameEndManager : MonoBehaviour
         public Sprite Lamina;
 
         [Tooltip("Texto de este final. Sale sobre la lamina, en la banda inferior, por encima del 'pulsa R'. Se puede dejar vacio.")]
-        [TextArea(3, 8)]
-        public string Texto = "";
+        public string[] Texto;
     }
 
     [Header("Imagen del final")]
     [Tooltip("Imagen a pantalla completa donde se pone la lamina del final. Cuelga del grupo de textos para heredar su fundido.")]
     public Image ImagenFinal;
 
-    [Tooltip("Todas las decisiones fueron la opcion Derecha (pasillo estrecho).")]
-    public Final Minimalista = new Final { Nombre = "Minimalista (todas Derecha)" };
-
     [Tooltip("Todas las decisiones fueron la opcion Izquierda (pasillo ancho).")]
-    public Final Consumista = new Final { Nombre = "Consumista (todas Izquierda)" };
+    public Final Bueno = new Final { Nombre = "Bueno (todas Izquierda)" };
 
     [Tooltip("Se han mezclado las dos opciones.")]
-    public Final Mixto = new Final { Nombre = "Mixto (mezcladas)" };
+    public Final Neutral = new Final { Nombre = "Neutral (mezcladas)" };
+
+    [Tooltip("Todas las decisiones fueron la opcion Derecha (pasillo estrecho).")]
+    public Final Malo = new Final { Nombre = "Malo (todas Derecha)" };
 
     // [ANADIDO: legibilidad del texto] Banda que se pone DETRAS del texto del final.
     //
@@ -96,14 +95,16 @@ public class GameEndManager : MonoBehaviour
     [Tooltip("Opacidad de esa banda. Las laminas son sobre blanco, asi que un blanco a media opacidad apaga el dibujo sin que se note un recuadro duro.")]
     [Range(0f, 1f)] public float OpacidadDeLaBanda = 0.75f;
 
-    [Tooltip("Que opcion lleva al final minimalista. Si algun dia se le da la vuelta al significado de Derecha e Izquierda, esto es lo unico que hay que cambiar.")]
-    public DecisionManager.Opcion OpcionMinimalista = DecisionManager.Opcion.Derecha;
+    [Tooltip("Que opcion lleva al final bueno.")]
+    public DecisionManager.Opcion OpcionBuena = DecisionManager.Opcion.Izquierda;
 
     [Header("Texto principal: uno por cada final posible")]
     [Tooltip("Muestra el resumen de conteo sobre la lamina. Desmarcado por defecto: la lamina ya cuenta la historia y el texto la ensucia.")]
     public bool MostrarResumen = false;
 
     public TextMeshProUGUI TextoFinalUI;
+
+    public string SeparadorDeTexto = "\n\n";
 
     [Tooltip("Un texto por cada combinacion de decisiones. Usa el menu contextual del componente para generarlas todas vacias.")]
     public List<FinalPorSecuencia> FinalesPorSecuencia = new List<FinalPorSecuencia>();
@@ -232,7 +233,7 @@ public class GameEndManager : MonoBehaviour
     // =======================================================================
 
     /// <summary>Cual de los tres finales se quiere forzar.</summary>
-    public enum TipoDeFinal { Minimalista, Consumista, Mixto }
+    public enum TipoDeFinal { Bueno, Neutral, Malo }
 
     /// <summary>
     /// [ANADIDO: finales de prueba] Coloca las decisiones necesarias para que salga el
@@ -246,24 +247,24 @@ public class GameEndManager : MonoBehaviour
     public void TerminarConFinal(TipoDeFinal cual)
     {
         if (terminado) return;
-
-        DecisionManager.Opcion mini = OpcionMinimalista;
-        DecisionManager.Opcion cons = mini == DecisionManager.Opcion.Derecha
+ 
+        DecisionManager.Opcion buena = OpcionBuena;
+        DecisionManager.Opcion mala = buena == DecisionManager.Opcion.Derecha
             ? DecisionManager.Opcion.Izquierda
             : DecisionManager.Opcion.Derecha;
-
+ 
         int total = Mathf.Max(1, DecisionesParaFinal);
-        if (cual == TipoDeFinal.Mixto && total < 2)
-            Debug.LogWarning("GameEndManager: con " + total + " decision no se puede montar un final mixto.", this);
-
+        if (cual == TipoDeFinal.Neutral && total < 2)
+            Debug.LogWarning("GameEndManager: con " + total + " decision no se puede montar un final neutro.", this);
+ 
         decisiones.Clear();
         for (int i = 0; i < total; i++)
         {
-            if (cual == TipoDeFinal.Minimalista) decisiones.Add(mini);
-            else if (cual == TipoDeFinal.Consumista) decisiones.Add(cons);
-            else decisiones.Add(i == 0 ? cons : mini);   // mezcla: al menos una de cada
+            if (cual == TipoDeFinal.Bueno) decisiones.Add(buena);
+            else if (cual == TipoDeFinal.Malo) decisiones.Add(mala);
+            else decisiones.Add(i == 0 ? mala : buena);   // mezcla: al menos una de cada
         }
-
+ 
         Debug.Log("GameEndManager: final de PRUEBA '" + cual + "' con la secuencia " + SecuenciaActual(), this);
         Terminar();
     }
@@ -295,12 +296,14 @@ public class GameEndManager : MonoBehaviour
 
     void RellenarTextos()
     {
-        // [CAMBIO: imagen de final] El texto principal ya no sale de FinalesPorSecuencia
-        // sino del propio final elegido, que es donde lo escribe el equipo.
         Final elegido = FinalElegido();
 
+        // [CORREGIDO] elegido.Texto ahora es un string[]; hay que construir el texto
+        // final combinando las entradas correctas del array (ver TextoDeFinal()).
+        string texto = TextoDeFinal(elegido);
+
         if (TextoFinalUI != null)
-            TextoFinalUI.text = elegido != null ? elegido.Texto : "";
+            TextoFinalUI.text = texto;
 
         if (ImagenFinal != null)
         {
@@ -309,11 +312,9 @@ public class GameEndManager : MonoBehaviour
             ImagenFinal.enabled = lamina != null;
         }
 
-        // La banda solo se ve si hay texto que arropar. Sin texto seria un recuadro
-        // gris flotando en medio de la lamina sin motivo.
         if (BandaDelTexto != null)
         {
-            bool hayTexto = elegido != null && !string.IsNullOrEmpty(elegido.Texto);
+            bool hayTexto = !string.IsNullOrEmpty(texto);
             BandaDelTexto.enabled = hayTexto;
 
             Color c = BandaDelTexto.color;
@@ -328,6 +329,45 @@ public class GameEndManager : MonoBehaviour
             TextoReinicioUI.text = TextoReinicio;
     }
 
+    string TextoDeFinal(Final final)
+    {
+        if (final == null || final.Texto == null || final.Texto.Length == 0)
+            return "";
+
+        List<string> trozos = new List<string>();
+
+        if (final == Neutral)
+        {
+            for (int i = 0; i < decisiones.Count; i++)
+            {
+                int baseIndex = i * 2;
+                int indice = decisiones[i] == DecisionManager.Opcion.Derecha ? baseIndex : baseIndex + 1;
+
+                if (indice < 0 || indice >= final.Texto.Length)
+                {
+                    Debug.LogWarning("GameEndManager: al final Neutral le falta texto en el indice " + indice +
+                        " (decision " + (i + 1) + " de " + decisiones.Count + "). Revisa que el array tenga " +
+                        (DecisionesParaFinal * 2) + " entradas.", this);
+                    continue;
+                }
+
+                if (!string.IsNullOrEmpty(final.Texto[indice]))
+                    trozos.Add(final.Texto[indice]);
+            }
+        }
+        else
+        {
+            // Bueno / Malo: recorrido normal, en orden.
+            for (int i = 0; i < final.Texto.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(final.Texto[i]))
+                    trozos.Add(final.Texto[i]);
+            }
+        }
+
+        return string.Join(SeparadorDeTexto, trozos);
+    }
+
     /// <summary>
     /// [ANADIDO: imagen de final] Que final toca segun lo que se haya elegido.
     ///
@@ -339,14 +379,14 @@ public class GameEndManager : MonoBehaviour
         int minimalistas = 0, consumistas = 0;
         for (int i = 0; i < decisiones.Count; i++)
         {
-            if (decisiones[i] == OpcionMinimalista) minimalistas++;
+            if (decisiones[i] == OpcionBuena) minimalistas++;
             else consumistas++;
         }
 
-        if (decisiones.Count == 0) return Mixto;
-        if (consumistas == 0) return Minimalista;
-        if (minimalistas == 0) return Consumista;
-        return Mixto;
+        if (decisiones.Count == 0) return Neutral;
+        if (consumistas == 0) return Malo;
+        if (minimalistas == 0) return Bueno;
+        return Neutral;
     }
 
     /// <summary>La secuencia jugada como cadena, por ejemplo "BBM".</summary>
