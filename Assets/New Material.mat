@@ -125,7 +125,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Borde: {r: 1, g: 0, b: 0, a: 0}
-    - _Color: {r: 1, g: 0.8807751, b: 0.68490565, a: 1}
+    - _Color: {r: 1, g: 0.9356132, b: 0.8283019, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Offset: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
